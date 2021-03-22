@@ -86,6 +86,10 @@ let controller = {
     return false;
   },
 
+  checkForWinner: () => {
+
+  },
+
   initialize: (boardSize = 3) => {
     view.appendResetButton();
     view.appendBoard(boardSize);
