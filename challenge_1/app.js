@@ -157,7 +157,6 @@ let controller = {
       for (let i = 0; i < cells.length; i++) {
         var cell = `row${cells[i].attributes.row.value}col${cells[i].attributes.column.value}`;
         if (winningCells[cell]) {
-          console.log(winningCells[cell])
           winningCells[cell] = false;
         }
       }
@@ -181,7 +180,6 @@ let controller = {
       for (let i = 0; i < cells.length; i++) {
         var cell = `row${cells[i].attributes.row.value}col${cells[i].attributes.column.value}`;
         if (winningCells[cell]) {
-          console.log(winningCells[cell])
           winningCells[cell] = false;
         }
       }
