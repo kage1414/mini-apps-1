@@ -8,15 +8,15 @@ let init = {
     document.body.appendChild(resetButton);
   },
 
-  appendBoard: () => {
+  appendBoard: (boardSize) => {
     let table = document.createElement('table');
     document.body.appendChild(table);
     let i = 0;
-    while (i < 3) {
+    while (i < boardSize) {
       let row = document.createElement('tr');
 
       let j = 0;
-      while (j < 3) {
+      while (j < boardSize) {
         let cell = document.createElement('td');
         cell.innerHTML = ' ';
         cell.setAttribute('class', j);
@@ -42,9 +42,9 @@ let init = {
   }
 }
 
-let initialize = () => {
+let initialize = (boardSize = 3) => {
   init.appendResetButton();
-  init.appendBoard();
+  init.appendBoard(boardSize);
   init.addClickHandlersToCells();
   moveCounter = 0;
 }
@@ -76,11 +76,11 @@ let clickHandler = (target) => {
 
 };
 
-let resetDOM = () => {
+let resetDOM = (boardSize) => {
   while (document.body.firstChild) {
     document.body.firstChild.remove();
   }
-  initialize()
+  initialize(boardSize)
 }
 
 initialize();
