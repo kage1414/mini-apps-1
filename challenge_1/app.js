@@ -26,7 +26,6 @@ let init = () => {
   let cells = document.getElementsByClassName('cell')
   for (let i = 0; i < cells.length; i++) {
     cells[i].addEventListener('click', (e) => {
-      console.log('click');
       clickHandler(e.target)
     })
   }
@@ -39,10 +38,10 @@ let isClicked = (target) => {
       return true;
     }
   }
-
   return false;
 }
 
+let moveCounter = 0;
 let clickHandler = (target) => {
 
   if (!isClicked(target)) {
@@ -54,10 +53,17 @@ let clickHandler = (target) => {
       target.innerHTML = 'O';
     }
     moveCounter++;
+  } else {
+    alert('Choose another space')
   }
 
 };
 
-let moveCounter = 0;
+let resetDOM = () => {
+  while (document.body.firstChild) {
+    document.body.firstChild.remove();
+  }
+  init()
+}
 
 init();
