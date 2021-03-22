@@ -55,9 +55,9 @@ let controller = {
 
   clickHandler: (target) => {
 
-    if (!controller.isClicked(target)) {
+    let player;
+    if (!controller.isClicked(target) && !model.gameOver) {
       target.className += ' clicked';
-      let player;
       if (model.moveCounter % 2 === 0) {
         player = 'x';
       } else {
@@ -73,8 +73,12 @@ let controller = {
       }
       model.moveCounter++;
       controller.checkForWinner(player)
-    } else {
+    } else if (!model.gameOver) {
       alert('Choose another space')
+    }
+
+    if (model.gameOver) {
+      alert(`${player.toUpperCase()} is the winner!`);
     }
 
   },
@@ -98,12 +102,9 @@ let controller = {
   checkForWinner: (player) => {
     let cells = document.getElementsByClassName(player);
 
-    // console.log(cells)
-
     if (controller.win.row(cells) || controller.win.col(cells) || controller.win.majDiag(cells) || controller.win.minDiag(cells)) {
       model.gameOver = true;
       model.winner = player;
-      alert(`${player.toUpperCase()} is the winner!`);
     }
 
   },
@@ -137,7 +138,6 @@ let controller = {
         columns[cells[i].attributes.column.value].push(cells[i]);
       }
       for (let idx in columns) {
-        console.log(columns[idx])
         if (columns[idx].length === 3) {
           return true
         }
@@ -149,6 +149,27 @@ let controller = {
     },
     minDiag: (cells) => {
       // Check if there are 3 cells each with equivalent row and column values
+      const winningCells = {
+        row0col0: true,
+        row1col1: true,
+        row2col2: true
+      }
+
+      for (let i = 0; i < cells.length; i++) {
+        var cell = `row${cells[i].attributes.row.value}col${cells[i].attributes.column.value}`;
+        if (winningCells[cell]) {
+          console.log(winningCells[cell])
+          winningCells[cell] = false;
+        }
+      }
+
+      for (let key in winningCells) {
+        if (winningCells[key] === true) {
+          return false;
+        }
+      }
+
+      return true;
     }
   },
 
@@ -157,6 +178,8 @@ let controller = {
     view.appendBoard(boardSize);
     controller.addClickHandlersToCells();
     model.moveCounter = 0;
+    model.gameOver = false;
+    model.winner = undefined;
   }
 }
 
