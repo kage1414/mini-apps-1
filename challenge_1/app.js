@@ -98,7 +98,7 @@ let controller = {
   checkForWinner: (player) => {
     let cells = document.getElementsByClassName(player);
 
-    console.log(cells)
+    // console.log(cells)
 
     if (controller.win.row(cells) || controller.win.col(cells) || controller.win.majDiag(cells) || controller.win.minDiag(cells)) {
       model.gameOver = true;
@@ -110,16 +110,31 @@ let controller = {
 
   win: {
     row: (cells) => {
-
+      // Check if there are 3 of the same row values with 3 unique column values
+      let rows = {
+        0: [],
+        1: [],
+        2: []
+      }
+      for (let i = 0; i < cells.length; i++) {
+        rows[cells[i].attributes.row.value].push(cells[i]);
+      }
+      for (let idx in rows) {
+        console.log(rows[idx])
+        if (rows[idx].length === 3) {
+          return true
+        }
+      }
+      return false;
     },
     col: (cells) => {
-
+      // Check if there are 3 of the same column values with 3 unique row values
     },
     majDiag: (cells) => {
-
+      //
     },
     minDiag: (cells) => {
-
+      // Check if there are 3 cells each with equivalent row and column values
     }
   },
 
