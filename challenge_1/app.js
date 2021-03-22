@@ -1,13 +1,14 @@
-let moveCounter;
-let init = {
+let model = {
+  moveCounter: 0
+}
 
+let view = {
   appendResetButton: () => {
     let resetButton = document.createElement('button');
     resetButton.innerHTML = 'Reset';
-    resetButton.setAttribute('onclick', 'resetDOM()');
+    resetButton.setAttribute('onclick', 'view.resetDOM()');
     document.body.appendChild(resetButton);
   },
-
   appendBoard: (boardSize) => {
     let table = document.createElement('table');
     document.body.appendChild(table);
@@ -32,55 +33,58 @@ let init = {
       i++;
     }
   },
+  resetDOM: (boardSize) => {
+    controller.removeDOMElements();
+    initialize(boardSize);
+  }
+}
+
+let controller = {
   addClickHandlersToCells: () => {
     let cells = document.getElementsByClassName('cell')
     for (let i = 0; i < cells.length; i++) {
       cells[i].addEventListener('click', (e) => {
-        clickHandler(e.target)
+        controller.clickHandler(e.target)
       })
     }
+  },
+  clickHandler: (target) => {
+
+    if (!controller.isClicked(target)) {
+      target.className += ' clicked';
+
+      if (model.moveCounter % 2 === 0) {
+        target.innerHTML = 'X'
+      } else {
+        target.innerHTML = 'O';
+      }
+      model.moveCounter++;
+    } else {
+      alert('Choose another space')
+    }
+
+  },
+  removeDOMElements: () => {
+    while(document.body.firstChild) {
+      document.body.firstChild.remove();
+    }
+  },
+  isClicked: (target) => {
+    var classes = target.className.split(' ');
+    for (let i = 0; i < classes.length; i++) {
+      if (classes[i] === 'clicked') {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
 let initialize = (boardSize = 3) => {
-  init.appendResetButton();
-  init.appendBoard(boardSize);
-  init.addClickHandlersToCells();
-  moveCounter = 0;
-}
-
-let isClicked = (target) => {
-  var classes = target.className.split(' ');
-  for (let i = 0; i < classes.length; i++) {
-    if (classes[i] === 'clicked') {
-      return true;
-    }
-  }
-  return false;
-}
-
-let clickHandler = (target) => {
-
-  if (!isClicked(target)) {
-  target.className += ' clicked';
-
-    if (moveCounter % 2 === 0) {
-      target.innerHTML = 'X'
-    } else {
-      target.innerHTML = 'O';
-    }
-    moveCounter++;
-  } else {
-    alert('Choose another space')
-  }
-
-};
-
-let resetDOM = (boardSize) => {
-  while (document.body.firstChild) {
-    document.body.firstChild.remove();
-  }
-  initialize(boardSize)
+  view.appendResetButton();
+  view.appendBoard(boardSize);
+  controller.addClickHandlersToCells();
+  model.moveCounter = 0;
 }
 
 initialize();
