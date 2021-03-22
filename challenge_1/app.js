@@ -120,7 +120,6 @@ let controller = {
         rows[cells[i].attributes.row.value].push(cells[i]);
       }
       for (let idx in rows) {
-        console.log(rows[idx])
         if (rows[idx].length === 3) {
           return true
         }
@@ -129,6 +128,21 @@ let controller = {
     },
     col: (cells) => {
       // Check if there are 3 of the same column values with 3 unique row values
+      let columns = {
+        0: [],
+        1: [],
+        2: []
+      }
+      for (let i = 0; i < cells.length; i++) {
+        columns[cells[i].attributes.column.value].push(cells[i]);
+      }
+      for (let idx in columns) {
+        console.log(columns[idx])
+        if (columns[idx].length === 3) {
+          return true
+        }
+      }
+      return false;
     },
     majDiag: (cells) => {
       //
