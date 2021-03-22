@@ -2,7 +2,12 @@ let model = {
   moveCounter: 0,
   gameOver: false,
   winner: undefined,
-  winnerAlerted: false
+  winnerAlerted: false,
+  occupiedSpaces: [
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' ']
+  ]
 }
 
 let view = {
@@ -57,7 +62,7 @@ let controller = {
   clickHandler: (target) => {
 
     let player;
-    if (!controller.isClicked(target) && !model.gameOver) {
+    if (!controller.isOccupied(target) && !model.gameOver) {
       target.className += ' clicked';
       if (model.moveCounter % 2 === 0) {
         player = 'x';
@@ -93,12 +98,11 @@ let controller = {
     }
   },
 
-  isClicked: (target) => {
-    var classes = target.className.split(' ');
-    for (let i = 0; i < classes.length; i++) {
-      if (classes[i] === 'clicked') {
-        return true;
-      }
+  isOccupied: (target) => {
+    let row = target.attributes.row.value;
+    let column = target.attributes.column.value;
+    if (models.occupiedSpaces[row][column] !== ' ') {
+      return true;
     }
     return false;
   },
