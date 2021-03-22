@@ -1,11 +1,10 @@
 let model = {
   moveCounter: 0,
-  gameOver: false;
+  gameOver: false,
   winner: undefined
 }
 
 let view = {
-
   appendResetButton: () => {
     let resetButton = document.createElement('button');
     resetButton.innerHTML = 'Reset';
@@ -45,7 +44,6 @@ let view = {
 }
 
 let controller = {
-
   addClickHandlersToCells: () => {
     let cells = document.getElementsByClassName('cell')
     for (let i = 0; i < cells.length; i++) {
