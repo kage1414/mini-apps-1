@@ -1,4 +1,8 @@
 let init = () => {
+  let resetButton = document.createElement('button');
+  resetButton.innerHTML = 'Reset';
+  resetButton.setAttribute('onclick', 'resetDOM()')
+  document.body.appendChild(resetButton)
   let table = document.createElement('table');
   document.body.appendChild(table);
 
