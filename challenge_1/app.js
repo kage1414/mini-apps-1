@@ -1,3 +1,4 @@
+let moveCounter;
 let init = {
 
   appendResetButton: () => {
@@ -45,6 +46,7 @@ let initialize = () => {
   init.appendResetButton();
   init.appendBoard();
   init.addClickHandlersToCells();
+  moveCounter = 0;
 }
 
 let isClicked = (target) => {
@@ -57,7 +59,6 @@ let isClicked = (target) => {
   return false;
 }
 
-let moveCounter = 0;
 let clickHandler = (target) => {
 
   if (!isClicked(target)) {
@@ -79,7 +80,7 @@ let resetDOM = () => {
   while (document.body.firstChild) {
     document.body.firstChild.remove();
   }
-  init()
+  initialize()
 }
 
 initialize();
