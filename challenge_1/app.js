@@ -1,14 +1,18 @@
 let model = {
-  moveCounter: 0
+  moveCounter: 0,
+  gameOver: false;
+  winner: undefined
 }
 
 let view = {
+
   appendResetButton: () => {
     let resetButton = document.createElement('button');
     resetButton.innerHTML = 'Reset';
     resetButton.setAttribute('onclick', 'view.resetDOM()');
     document.body.appendChild(resetButton);
   },
+
   appendBoard: (boardSize) => {
     let table = document.createElement('table');
     document.body.appendChild(table);
@@ -33,13 +37,15 @@ let view = {
       i++;
     }
   },
+
   resetDOM: (boardSize) => {
     controller.removeDOMElements();
-    initialize(boardSize);
+    controller.initialize(boardSize);
   }
 }
 
 let controller = {
+
   addClickHandlersToCells: () => {
     let cells = document.getElementsByClassName('cell')
     for (let i = 0; i < cells.length; i++) {
@@ -48,6 +54,7 @@ let controller = {
       })
     }
   },
+
   clickHandler: (target) => {
 
     if (!controller.isClicked(target)) {
@@ -64,11 +71,13 @@ let controller = {
     }
 
   },
+
   removeDOMElements: () => {
     while(document.body.firstChild) {
       document.body.firstChild.remove();
     }
   },
+
   isClicked: (target) => {
     var classes = target.className.split(' ');
     for (let i = 0; i < classes.length; i++) {
@@ -77,14 +86,14 @@ let controller = {
       }
     }
     return false;
+  },
+
+  initialize: (boardSize = 3) => {
+    view.appendResetButton();
+    view.appendBoard(boardSize);
+    controller.addClickHandlersToCells();
+    model.moveCounter = 0;
   }
 }
 
-let initialize = (boardSize = 3) => {
-  view.appendResetButton();
-  view.appendBoard(boardSize);
-  controller.addClickHandlersToCells();
-  model.moveCounter = 0;
-}
-
-initialize();
+controller.initialize();
