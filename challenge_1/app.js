@@ -23,10 +23,10 @@ let view = {
       while (j < boardSize) {
         let cell = document.createElement('td');
         cell.innerHTML = ' ';
-        cell.setAttribute('class', j);
         cell.setAttribute('class', 'cell');
-        cell.setAttribute('id', i.toString() + j.toString());
         cell.setAttribute('style', 'height: 200px; width: 200px; text-align: center; vertical-align: sub; font-size: 100px; background-color: #d9d9d9;');
+        cell.setAttribute('row', i);
+        cell.setAttribute('column', j);
         row.appendChild(cell);
         j++
       }
@@ -57,13 +57,22 @@ let controller = {
 
     if (!controller.isClicked(target)) {
       target.className += ' clicked';
-
+      let player;
       if (model.moveCounter % 2 === 0) {
+        player = 'x';
+      } else {
+        player = 'o';
+      }
+
+      if (player === 'x') {
         target.innerHTML = 'X'
+        target.className += ' x';
       } else {
         target.innerHTML = 'O';
+        target.className += ' o';
       }
       model.moveCounter++;
+      controller.checkForWinner(player)
     } else {
       alert('Choose another space')
     }
@@ -86,8 +95,32 @@ let controller = {
     return false;
   },
 
-  checkForWinner: () => {
+  checkForWinner: (player) => {
+    let cells = document.getElementsByClassName(player);
 
+    console.log(cells)
+
+    if (controller.win.row(cells) || controller.win.col(cells) || controller.win.majDiag(cells) || controller.win.minDiag(cells)) {
+      model.gameOver = true;
+      model.winner = player;
+      alert(`${player.toUpperCase()} is the winner!`);
+    }
+
+  },
+
+  win: {
+    row: (cells) => {
+
+    },
+    col: (cells) => {
+
+    },
+    majDiag: (cells) => {
+
+    },
+    minDiag: (cells) => {
+
+    }
   },
 
   initialize: (boardSize = 3) => {
