@@ -23,13 +23,40 @@ let init = () => {
     i++;
   }
 
-  var cells = document.getElementsByClassName('cell')
+  let cells = document.getElementsByClassName('cell')
   for (let i = 0; i < cells.length; i++) {
-    cells[i].addEventListener('click', () => {
+    cells[i].addEventListener('click', (e) => {
       console.log('click');
+      clickHandler(e.target)
     })
   }
 }
+
+let isClicked = (target) => {
+  var classes = target.className.split(' ');
+  for (let i = 0; i < classes.length; i++) {
+    if (classes[i] === 'clicked') {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+let clickHandler = (target) => {
+
+  if (!isClicked(target)) {
+  target.className += ' clicked';
+
+    if (moveCounter % 2 === 0) {
+      target.innerHTML = 'X'
+    } else {
+      target.innerHTML = 'O';
+    }
+    moveCounter++;
+  }
+
+};
 
 let moveCounter = 0;
 
