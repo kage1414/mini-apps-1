@@ -1,7 +1,8 @@
 let model = {
   moveCounter: 0,
   gameOver: false,
-  winner: undefined
+  winner: undefined,
+  winnerAlerted: false
 }
 
 let view = {
@@ -77,8 +78,9 @@ let controller = {
       alert('Choose another space')
     }
 
-    if (model.gameOver) {
+    if (model.gameOver && !model.winnerAlerted) {
       alert(`${player.toUpperCase()} is the winner!`);
+      model.winnerAlerted = true;
     }
 
   },
@@ -146,6 +148,27 @@ let controller = {
     },
     majDiag: (cells) => {
       //
+      const winningCells = {
+        row2col0: true,
+        row1col1: true,
+        row0col2: true
+      }
+
+      for (let i = 0; i < cells.length; i++) {
+        var cell = `row${cells[i].attributes.row.value}col${cells[i].attributes.column.value}`;
+        if (winningCells[cell]) {
+          console.log(winningCells[cell])
+          winningCells[cell] = false;
+        }
+      }
+
+      for (let key in winningCells) {
+        if (winningCells[key] === true) {
+          return false;
+        }
+      }
+
+      return true;
     },
     minDiag: (cells) => {
       // Check if there are 3 cells each with equivalent row and column values
@@ -180,6 +203,7 @@ let controller = {
     model.moveCounter = 0;
     model.gameOver = false;
     model.winner = undefined;
+    model.winnerAlerted = false;
   }
 }
 
