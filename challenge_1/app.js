@@ -79,7 +79,9 @@ let controller = {
     }
 
     if (model.gameOver && !model.winnerAlerted) {
-      alert(`${player.toUpperCase()} is the winner!`);
+      setTimeout(() => {
+        alert(`${model.winner.toUpperCase()} is the winner!`);
+      }, 0)
       model.winnerAlerted = true;
     }
 
