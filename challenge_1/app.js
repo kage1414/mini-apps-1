@@ -8,7 +8,8 @@ let model = {
     ['', '', ''],
     ['', '', '']
   ],
-  nextPlayer: 'X'
+  currentPlayer: 'X',
+  nextPlayer: 'O'
 }
 
 let view = {
@@ -62,23 +63,26 @@ let controller = {
   },
 
   clickHandler: (target) => {
-    // console.log(target.innerText)
 
-    let player = model.nextPlayer;
     if (!controller.isOccupied(target) && !model.gameOver) {
       let row = target.attributes.row.value;
       let column = target.attributes.column.value;
-      model.occupiedSpaces[row][column] = model.nextPlayer;
-      target.innerHTML = model.nextPlayer;
-      if (model.moveCounter % 2 === 0) {
+      model.occupiedSpaces[row][column] = model.currentPlayer;
+      target.innerHTML = model.currentPlayer;
+      controller.checkForWinner(model.currentPlayer)
+
+      if (model.moveCounter % 2 === 1) {
         model.nextPlayer = 'O';
+        model.currentPlayer= 'X';
       } else {
         model.nextPlayer = 'X';
+        model.currentPlayer = 'O';
       }
+
       model.moveCounter++;
-      controller.checkForWinner(player)
+
     } else if (!model.gameOver) {
-      alert('Choose another space')
+      alert('Choose another space');
     }
 
     if (model.gameOver && !model.winnerAlerted) {
@@ -106,12 +110,11 @@ let controller = {
   },
 
   checkForWinner: (player) => {
-    console.log('player', player)
     let cells = document.getElementsByClassName(player);
 
-    if (controller.win.row(player) || controller.win.col(player) || controller.win.majDiag(player) || controller.win.minDiag(player)) {
+    if (controller.win.row(model.currentPlayer) || controller.win.col(model.currentPlayer) || controller.win.minDiag(model.currentPlayer) || controller.win.majDiag(model.currentPlayer)) {
       model.gameOver = true;
-      model.winner = player;
+      model.winner = model.currentPlayer;
     }
 
   },
@@ -121,7 +124,6 @@ let controller = {
       // Check if there are 3 of the same row values with 3 unique column values
       for (let i = 0; i < model.occupiedSpaces.length; i++) {
         for (let j = 0; j < model.occupiedSpaces[i].length; j++) {
-          console.log(player);
           if (model.occupiedSpaces[i][j] !== player) {
             break;
           } else if (model.occupiedSpaces[i][j] === player && j === model.occupiedSpaces[i].length - 1) {
@@ -136,7 +138,6 @@ let controller = {
       // Check if there are 3 of the same column values with 3 unique row values
       for (let i = 0; i < model.occupiedSpaces.length; i++) {
         for (let j = 0; j < model.occupiedSpaces[i].length; j++) {
-          console.log(player);
           if (model.occupiedSpaces[j][i] !== player) {
             break;
           } else if (model.occupiedSpaces[j][i] === player && j === model.occupiedSpaces[j].length - 1) {
@@ -146,68 +147,48 @@ let controller = {
       }
       return false;
     },
-    majDiag: (cells) => {
+    majDiag: (player) => {
       //
-      const winningCells = {
-        row2col0: true,
-        row1col1: true,
-        row0col2: true
-      }
-
-      for (let i = 0; i < cells.length; i++) {
-        var cell = `row${cells[i].attributes.row.value}col${cells[i].attributes.column.value}`;
-        if (winningCells[cell]) {
-          winningCells[cell] = false;
+      for (let i = 0; i < model.occupiedSpaces.length; i++) {
+        if (model.occupiedSpaces[i][(model.occupiedSpaces.length - 1) - i] !== player) {
+          break;
+        } else if (i === model.occupiedSpaces.length - 1 && model.occupiedSpaces[i][(model.occupiedSpaces.length - 1) - i] === player) {
+          return true;
         }
       }
 
-      for (let key in winningCells) {
-        if (winningCells[key] === true) {
-          return false;
-        }
-      }
-
-      return true;
+      return false;
     },
-    minDiag: (cells) => {
+    minDiag: (player) => {
       // Check if there are 3 cells each with equivalent row and column values
-      const winningCells = {
-        row0col0: true,
-        row1col1: true,
-        row2col2: true
-      }
 
-      for (let i = 0; i < cells.length; i++) {
-        var cell = `row${cells[i].attributes.row.value}col${cells[i].attributes.column.value}`;
-        if (winningCells[cell]) {
-          winningCells[cell] = false;
+      for (let i = 0; i < model.occupiedSpaces.length; i++) {
+        if (model.occupiedSpaces[i][i] !== player) {
+          break;
+        } else if (i === model.occupiedSpaces.length - 1 && model.occupiedSpaces[i][i] === player) {
+          return true;
         }
       }
 
-      for (let key in winningCells) {
-        if (winningCells[key] === true) {
-          return false;
-        }
-      }
-
-      return true;
+      return false;
     }
   },
 
   initialize: (boardSize = 3) => {
-    view.appendResetButton();
-    view.appendBoard(boardSize);
-    controller.addClickHandlersToCells();
     model.moveCounter = 0;
+    model.gameOver = false;
+    model.winner = undefined;
+    model.winnerAlerted = false;
     model.occupiedSpaces = [
       ['', '', ''],
       ['', '', ''],
       ['', '', '']
     ];
-    model.gameOver = false;
-    model.winner = undefined;
-    model.winnerAlerted = false;
-    model.nextPlayer = 'X';
+    model.currentPlayer = 'X';
+    model.nextPlayer = 'O';
+    view.appendResetButton();
+    view.appendBoard(boardSize);
+    controller.addClickHandlersToCells();
   }
 }
 
