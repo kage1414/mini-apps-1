@@ -8,8 +8,7 @@ let model = {
     ['', '', ''],
     ['', '', '']
   ],
-  currentPlayer: 'X',
-  nextPlayer: 'O'
+  currentPlayer: 'X'
 }
 
 let view = {
@@ -72,10 +71,8 @@ let controller = {
       controller.checkForWinner();
 
       if (model.moveCounter % 2 === 1) {
-        model.nextPlayer = 'O';
         model.currentPlayer= 'X';
       } else {
-        model.nextPlayer = 'X';
         model.currentPlayer = 'O';
       }
 
@@ -178,7 +175,6 @@ let controller = {
       ['', '', '']
     ];
     model.currentPlayer = 'X';
-    model.nextPlayer = 'O';
     view.appendBoard(boardSize);
     view.appendResetButton();
     controller.addClickHandlersToCells();
