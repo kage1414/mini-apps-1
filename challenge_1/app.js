@@ -69,7 +69,7 @@ let controller = {
       let column = target.attributes.column.value;
       model.occupiedSpaces[row][column] = model.currentPlayer;
       target.innerHTML = model.currentPlayer;
-      controller.checkForWinner(model.currentPlayer)
+      controller.checkForWinner();
 
       if (model.moveCounter % 2 === 1) {
         model.nextPlayer = 'O';
@@ -87,7 +87,7 @@ let controller = {
 
     if (model.gameOver && !model.winnerAlerted) {
       setTimeout(() => {
-        alert(`${model.winner.toUpperCase()} is the winner!`);
+        alert(`${model.winner} is the winner!`);
       }, 0)
       model.winnerAlerted = true;
     }
@@ -110,9 +110,7 @@ let controller = {
   },
 
   checkForWinner: (player) => {
-    let cells = document.getElementsByClassName(player);
-
-    if (controller.win.row(model.currentPlayer) || controller.win.col(model.currentPlayer) || controller.win.minDiag(model.currentPlayer) || controller.win.majDiag(model.currentPlayer)) {
+    if (controller.win.row() || controller.win.col() || controller.win.minDiag() || controller.win.majDiag()) {
       model.gameOver = true;
       model.winner = model.currentPlayer;
     }
@@ -120,13 +118,12 @@ let controller = {
   },
 
   win: {
-    row: (player) => {
-      // Check if there are 3 of the same row values with 3 unique column values
+    row: () => {
       for (let i = 0; i < model.occupiedSpaces.length; i++) {
         for (let j = 0; j < model.occupiedSpaces[i].length; j++) {
-          if (model.occupiedSpaces[i][j] !== player) {
+          if (model.occupiedSpaces[i][j] !== model.currentPlayer) {
             break;
-          } else if (model.occupiedSpaces[i][j] === player && j === model.occupiedSpaces[i].length - 1) {
+          } else if (model.occupiedSpaces[i][j] === model.currentPlayer && j === model.occupiedSpaces[i].length - 1) {
             console.log('true')
             return true;
           }
@@ -134,38 +131,34 @@ let controller = {
       }
       return false;
     },
-    col: (player) => {
-      // Check if there are 3 of the same column values with 3 unique row values
+    col: () => {
       for (let i = 0; i < model.occupiedSpaces.length; i++) {
         for (let j = 0; j < model.occupiedSpaces[i].length; j++) {
-          if (model.occupiedSpaces[j][i] !== player) {
+          if (model.occupiedSpaces[j][i] !== model.currentPlayer) {
             break;
-          } else if (model.occupiedSpaces[j][i] === player && j === model.occupiedSpaces[j].length - 1) {
+          } else if (model.occupiedSpaces[j][i] === model.currentPlayer && j === model.occupiedSpaces[j].length - 1) {
             return true;
           }
         }
       }
       return false;
     },
-    majDiag: (player) => {
-      //
+    majDiag: () => {
       for (let i = 0; i < model.occupiedSpaces.length; i++) {
-        if (model.occupiedSpaces[i][(model.occupiedSpaces.length - 1) - i] !== player) {
+        if (model.occupiedSpaces[i][(model.occupiedSpaces.length - 1) - i] !== model.currentPlayer) {
           break;
-        } else if (i === model.occupiedSpaces.length - 1 && model.occupiedSpaces[i][(model.occupiedSpaces.length - 1) - i] === player) {
+        } else if (i === model.occupiedSpaces.length - 1 && model.occupiedSpaces[i][(model.occupiedSpaces.length - 1) - i] === model.currentPlayer) {
           return true;
         }
       }
 
       return false;
     },
-    minDiag: (player) => {
-      // Check if there are 3 cells each with equivalent row and column values
-
+    minDiag: () => {
       for (let i = 0; i < model.occupiedSpaces.length; i++) {
-        if (model.occupiedSpaces[i][i] !== player) {
+        if (model.occupiedSpaces[i][i] !== model.currentPlayer) {
           break;
-        } else if (i === model.occupiedSpaces.length - 1 && model.occupiedSpaces[i][i] === player) {
+        } else if (i === model.occupiedSpaces.length - 1 && model.occupiedSpaces[i][i] === model.currentPlayer) {
           return true;
         }
       }
