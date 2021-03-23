@@ -1,15 +1,4 @@
-let model = {
-  moveCounter: 0,
-  gameOver: false,
-  winner: undefined,
-  winnerAlerted: false,
-  occupiedSpaces: [
-    ['', '', ''],
-    ['', '', ''],
-    ['', '', '']
-  ],
-  currentPlayer: 'X'
-}
+let model = {};
 
 let view = {
   appendResetButton: () => {
