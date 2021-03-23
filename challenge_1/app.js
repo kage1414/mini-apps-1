@@ -4,10 +4,11 @@ let model = {
   winner: undefined,
   winnerAlerted: false,
   occupiedSpaces: [
-    [' ', ' ', ' '],
-    [' ', ' ', ' '],
-    [' ', ' ', ' ']
-  ]
+    ['', '', ''],
+    ['', '', ''],
+    ['', '', '']
+  ],
+  nextPlayer: 'X'
 }
 
 let view = {
@@ -28,7 +29,7 @@ let view = {
       let j = 0;
       while (j < boardSize) {
         let cell = document.createElement('td');
-        cell.innerHTML = ' ';
+        cell.innerHTML = '';
         cell.setAttribute('class', 'cell');
         cell.setAttribute('style', 'height: 200px; width: 200px; text-align: center; vertical-align: sub; font-size: 100px; background-color: #d9d9d9;');
         cell.setAttribute('row', i);
@@ -54,28 +55,25 @@ let controller = {
     let cells = document.getElementsByClassName('cell')
     for (let i = 0; i < cells.length; i++) {
       cells[i].addEventListener('click', (e) => {
+        // console.log(e)
         controller.clickHandler(e.target)
       })
     }
   },
 
   clickHandler: (target) => {
+    // console.log(target.innerText)
 
-    let player;
+    let player = model.nextPlayer;
     if (!controller.isOccupied(target) && !model.gameOver) {
-      target.className += ' clicked';
+      let row = target.attributes.row.value;
+      let column = target.attributes.column.value;
+      model.occupiedSpaces[row][column] = model.nextPlayer;
+      target.innerHTML = model.nextPlayer;
       if (model.moveCounter % 2 === 0) {
-        player = 'x';
+        model.nextPlayer = 'O';
       } else {
-        player = 'o';
-      }
-
-      if (player === 'x') {
-        target.innerHTML = 'X'
-        target.className += ' x';
-      } else {
-        target.innerHTML = 'O';
-        target.className += ' o';
+        model.nextPlayer = 'X';
       }
       model.moveCounter++;
       controller.checkForWinner(player)
@@ -101,16 +99,17 @@ let controller = {
   isOccupied: (target) => {
     let row = target.attributes.row.value;
     let column = target.attributes.column.value;
-    if (models.occupiedSpaces[row][column] !== ' ') {
+    if (model.occupiedSpaces[row][column] !== '') {
       return true;
     }
     return false;
   },
 
   checkForWinner: (player) => {
+    console.log('player', player)
     let cells = document.getElementsByClassName(player);
 
-    if (controller.win.row(cells) || controller.win.col(cells) || controller.win.majDiag(cells) || controller.win.minDiag(cells)) {
+    if (controller.win.row(player) || controller.win.col(player) || controller.win.majDiag(player) || controller.win.minDiag(player)) {
       model.gameOver = true;
       model.winner = player;
     }
@@ -118,19 +117,17 @@ let controller = {
   },
 
   win: {
-    row: (cells) => {
+    row: (player) => {
       // Check if there are 3 of the same row values with 3 unique column values
-      let rows = {
-        0: [],
-        1: [],
-        2: []
-      }
-      for (let i = 0; i < cells.length; i++) {
-        rows[cells[i].attributes.row.value].push(cells[i]);
-      }
-      for (let idx in rows) {
-        if (rows[idx].length === 3) {
-          return true
+      for (let i = 0; i < model.occupiedSpaces.length; i++) {
+        for (let j = 0; j < model.occupiedSpaces[i].length; j++) {
+          console.log(player);
+          if (model.occupiedSpaces[i][j] !== player) {
+            break;
+          } else if (model.occupiedSpaces[i][j] === player && j === model.occupiedSpaces[i].length - 1) {
+            console.log('true')
+            return true;
+          }
         }
       }
       return false;
