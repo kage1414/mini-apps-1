@@ -32,7 +32,7 @@ let view = {
         let cell = document.createElement('td');
         cell.innerHTML = '';
         cell.setAttribute('class', 'cell');
-        cell.setAttribute('style', 'height: 200px; width: 200px; text-align: center; vertical-align: sub; font-size: 100px; background-color: #d9d9d9;');
+        cell.setAttribute('style', 'height: 180px; width: 180px; text-align: center; vertical-align: sub; font-size: 100px; background-color: #d9d9d9;');
         cell.setAttribute('row', i);
         cell.setAttribute('column', j);
         row.appendChild(cell);
@@ -82,7 +82,7 @@ let controller = {
       model.moveCounter++;
 
     } else if (!model.gameOver) {
-      alert('Choose another space');
+      alert('Space taken. Please choose another space.');
     }
 
     if (model.gameOver && !model.winnerAlerted) {
@@ -186,8 +186,8 @@ let controller = {
     ];
     model.currentPlayer = 'X';
     model.nextPlayer = 'O';
-    view.appendResetButton();
     view.appendBoard(boardSize);
+    view.appendResetButton();
     controller.addClickHandlersToCells();
   }
 }
