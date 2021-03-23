@@ -132,19 +132,16 @@ let controller = {
       }
       return false;
     },
-    col: (cells) => {
+    col: (player) => {
       // Check if there are 3 of the same column values with 3 unique row values
-      let columns = {
-        0: [],
-        1: [],
-        2: []
-      }
-      for (let i = 0; i < cells.length; i++) {
-        columns[cells[i].attributes.column.value].push(cells[i]);
-      }
-      for (let idx in columns) {
-        if (columns[idx].length === 3) {
-          return true
+      for (let i = 0; i < model.occupiedSpaces.length; i++) {
+        for (let j = 0; j < model.occupiedSpaces[i].length; j++) {
+          console.log(player);
+          if (model.occupiedSpaces[j][i] !== player) {
+            break;
+          } else if (model.occupiedSpaces[j][i] === player && j === model.occupiedSpaces[j].length - 1) {
+            return true;
+          }
         }
       }
       return false;
@@ -202,9 +199,15 @@ let controller = {
     view.appendBoard(boardSize);
     controller.addClickHandlersToCells();
     model.moveCounter = 0;
+    model.occupiedSpaces = [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', '']
+    ];
     model.gameOver = false;
     model.winner = undefined;
     model.winnerAlerted = false;
+    model.nextPlayer = 'X';
   }
 }
 
