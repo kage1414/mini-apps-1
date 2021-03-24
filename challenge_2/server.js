@@ -22,7 +22,6 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/json', (req, res, next) => {
-  console.log('request received');
   console.log(req.body);
   res.send('hello');
   next();
