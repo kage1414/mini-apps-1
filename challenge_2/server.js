@@ -1,5 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
+const fs = require('fs');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
@@ -24,16 +25,50 @@ app.get('/', (req, res, next) => {
 
 app.post('/json', (req, res, next) => {
   let parsed = JSON.parse(req.body.json);
-  let keys = Object.keys(parsed);
-  let csv = '';
-  _.map(keys, (key, idx) => {
-    if (idx === keys.length - 1) {
-      csv += key + '\n';
-    } else {
-      csv += key + ',';
-    }
-  });
 
+  // Map keys to an array for index reference
+  let idxReference = [];
+  let keys = Object.keys(parsed);
+  _.map(keys, (key) => {
+    if (key !== 'children') {
+      idxReference.push(key);
+    }
+  })
+
+  // Render first line of csv
+  let lines = []
+  lines.push(idxReference.join(','));
+
+  // Render subsequent lines of children
+
+  let writeValues = (json) => {
+    var valArray = [];
+
+    _.each(json, (key) => {
+      if (key !== 'children') {
+        var idx = idxReference.indexOf(key);
+        valArray[idx] = json[idx];
+      }
+    })
+
+    for (let i = 0; i < idxReference.length; i++) {
+      if (!valArray[i]) {
+        valArray[i] = '';
+      }
+    }
+
+    lines.push(valArray.join(','));
+
+    if (json.children.length > 0) {
+      _.each(json.children, (child) => {
+        writeValues(child);
+      })
+    }
+  }
+
+  csv = lines.join('\n');
+
+  console.log(csv);
   res.send(csv);
   next();
 });
