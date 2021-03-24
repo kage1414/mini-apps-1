@@ -3,6 +3,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
+const fileupload = require('express-fileupload');
 
 const app = express();
 const PORT = 3000;
@@ -11,20 +12,14 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.listen(PORT, (err) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log('Server listening on port', PORT);
-});
+app.use(fileupload());
 
 app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'client', 'index.html'));
   next();
 });
 
-let json2csv = (json) => {
+let jsonToCsv = (json) => {
   let parsed = JSON.parse(json);
   let idxReference = [];
   let keys = Object.keys(parsed);
@@ -75,13 +70,22 @@ let json2csv = (json) => {
   return lines.join('\n');
 };
 
+let jsonFileToCsv = (json) => {
+  let string = json.data.toString();
+
+  return jsonToCsv(string);
+};
+
 app.post('/json', (req, res, next) => {
-  console.log('req.body', req.body);
-  console.log('req.file', req.file);
-  console.log('JSON data received, converting to CSV...');
-  let csv = json2csv(req.body.json);
+  let csv = jsonFileToCsv(req.files.json);
   res.type('text/csv');
   res.send(csv);
-  console.log('CSV sent');
   next();
+});
+
+app.listen(PORT, (err) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log('Server listening on port', PORT);
 });
