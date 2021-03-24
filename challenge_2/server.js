@@ -2,13 +2,13 @@ const express = require('express');
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
-// const http = require('http');
 const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.static(path.join(__dirname, 'client')));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -23,8 +23,6 @@ app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'client', 'index.html'));
   next();
 });
-
-
 
 let json2csv = (json) => {
   let parsed = JSON.parse(json);
@@ -49,6 +47,10 @@ let json2csv = (json) => {
     for (var key in json) {
       if (key !== 'children') {
         var idx = idxReference.indexOf(key);
+        if (idx === -1) {
+          idxReference.push(key);
+          idx = idxReference.indexOf(key);
+        }
         valArray[idx] = json[key];
       }
     }
@@ -74,6 +76,8 @@ let json2csv = (json) => {
 };
 
 app.post('/json', (req, res, next) => {
+  console.log('req.body', req.body);
+  console.log('req.file', req.file);
   console.log('JSON data received, converting to CSV...');
   let csv = json2csv(req.body.json);
   res.type('text/csv');
