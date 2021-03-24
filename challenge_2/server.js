@@ -44,12 +44,13 @@ app.post('/json', (req, res, next) => {
   let writeValues = (json) => {
     var valArray = [];
 
-    _.each(json, (key) => {
+    for (var key in json) {
       if (key !== 'children') {
         var idx = idxReference.indexOf(key);
-        valArray[idx] = json[idx];
+        console.log('idx', idx, 'key', key)
+        valArray[idx] = json[key];
       }
-    })
+    }
 
     for (let i = 0; i < idxReference.length; i++) {
       if (!valArray[i]) {
@@ -66,9 +67,10 @@ app.post('/json', (req, res, next) => {
     }
   }
 
+  writeValues(parsed);
+
   csv = lines.join('\n');
 
-  console.log(csv);
   res.send(csv);
   next();
 });
