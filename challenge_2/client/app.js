@@ -1,5 +1,3 @@
-const endpoint = 'json';
-
 let model = {};
 
 let view = {
