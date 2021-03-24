@@ -47,7 +47,6 @@ app.post('/json', (req, res, next) => {
     for (var key in json) {
       if (key !== 'children') {
         var idx = idxReference.indexOf(key);
-        console.log('idx', idx, 'key', key)
         valArray[idx] = json[key];
       }
     }
@@ -71,6 +70,7 @@ app.post('/json', (req, res, next) => {
 
   csv = lines.join('\n');
 
+  res.type('text/csv');
   res.send(csv);
   next();
 });
