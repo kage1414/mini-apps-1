@@ -23,20 +23,20 @@ app.get('/', (req, res, next) => {
   next();
 });
 
-app.post('/json', (req, res, next) => {
-  let parsed = JSON.parse(req.body.json);
 
-  // Map keys to an array for index reference
+
+let json2csv = (json) => {
+  let parsed = JSON.parse(json);
   let idxReference = [];
   let keys = Object.keys(parsed);
   _.map(keys, (key) => {
     if (key !== 'children') {
       idxReference.push(key);
     }
-  })
+  });
 
   // Render first line of csv
-  let lines = []
+  let lines = [];
   lines.push(idxReference.join(','));
 
   // Render subsequent lines of children
@@ -62,15 +62,20 @@ app.post('/json', (req, res, next) => {
     if (json.children.length > 0) {
       _.each(json.children, (child) => {
         writeValues(child);
-      })
+      });
     }
-  }
+  };
 
   writeValues(parsed);
 
-  csv = lines.join('\n');
+  return lines.join('\n');
+};
 
+app.post('/json', (req, res, next) => {
+  console.log('JSON data received, converting to CSV...');
+  let csv = json2csv(req.body.json);
   res.type('text/csv');
   res.send(csv);
+  console.log('CSV sent');
   next();
 });
