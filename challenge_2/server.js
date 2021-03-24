@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
-const http = require('http');
+// const http = require('http');
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = 3000;
@@ -29,6 +29,7 @@ let json2csv = (json) => {
   let parsed = JSON.parse(json);
   let idxReference = [];
   let keys = Object.keys(parsed);
+
   _.map(keys, (key) => {
     if (key !== 'children') {
       idxReference.push(key);
