@@ -1,10 +1,13 @@
 const express = require('express');
 const path = require('path');
 const http = require('http');
+const bodyParser = require('body-parser');
 const app = express();
 const PORT = 3000;
 
-app.use('/index', express.static(path.join(__dirname, 'client', 'index.html')));
+app.use(express.static(path.join(__dirname, 'client')));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.listen(PORT, (err) => {
   if (err) {
@@ -14,10 +17,13 @@ app.listen(PORT, (err) => {
 });
 
 app.get('/', (req, res, next) => {
-  res.redirect('/index');
+  res.sendFile(path.join(__dirname, 'client', 'index.html'));
   next();
 });
 
-app.get('/json', (req, res, next) => {
+app.post('/json', (req, res, next) => {
+  console.log('request received');
+  console.log(req.body);
   res.send('hello');
+  next();
 });

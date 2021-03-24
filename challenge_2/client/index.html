@@ -3,11 +3,11 @@
   <head>
   </head>
   <body>
+    <!-- <script src='./app.js'></script> -->
     <h1>Submit JSON</h1>
-    <form>
-      <textarea class="json"></textarea>
-      <button onclick="sendRequest()">Submit</button>
+    <form method="POST" action="/json">
+      <textarea id="json" name="json">Enter JSON Data Here</textarea>
+      <input type="submit" value="Submit">
     </form>
-    <script src='./app.js'></script>
   </body>
 </html>
