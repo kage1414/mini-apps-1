@@ -1,4 +1,5 @@
 const express = require('express');
+const _ = require('lodash');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
@@ -22,7 +23,17 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/json', (req, res, next) => {
-  console.log(req.body);
-  res.send('hello');
+  let parsed = JSON.parse(req.body.json);
+  let keys = Object.keys(parsed);
+  let csv = '';
+  _.map(keys, (key, idx) => {
+    if (idx === keys.length - 1) {
+      csv += key + '\n';
+    } else {
+      csv += key + ',';
+    }
+  });
+
+  res.send(csv);
   next();
 });
