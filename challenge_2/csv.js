@@ -56,3 +56,7 @@ module.exports.jsonFileToCsv = (json) => {
 
   return module.exports.jsonToCsv(string);
 };
+
+module.exports.createFilename = (filename) => {
+  return filename.split('.')[0] + '.csv';
+};

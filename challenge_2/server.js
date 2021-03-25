@@ -20,9 +20,9 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/json', (req, res, next) => {
-  let csvString = csv.jsonFileToCsv(req.files.json);
   res.type('text/csv');
-  res.send(csvString);
+  res.attachment(csv.createFilename(req.files.json.name));
+  res.send(csv.jsonFileToCsv(req.files.json));
   next();
 });
 
