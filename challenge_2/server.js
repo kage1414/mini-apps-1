@@ -79,6 +79,7 @@ let jsonFileToCsv = (json) => {
 app.post('/json', (req, res, next) => {
   let csv = jsonFileToCsv(req.files.json);
   res.type('text/csv');
+  console.log(csv)
   res.send(csv);
   next();
 });
