@@ -1,6 +1,5 @@
 const express = require('express');
 const _ = require('lodash');
-const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 const fileupload = require('express-fileupload');
