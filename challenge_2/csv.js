@@ -72,5 +72,3 @@ module.exports.csvToHtml = (csv) => {
   tableRows.push('</table>');
   return tableRows.join('');
 };
-
-

@@ -4,7 +4,11 @@ let view = {
     `<h1>Submit JSON</h1>
     <form id="submitJSON" enctype="multipart/form-data">
       <textarea id="json" rows="50" cols="50"></textarea>
-      <input id="submit" type="submit" value="Submit">
+      <input id="submitText" type="submit" value="Submit">
+    </form>
+    <form id="submitJSONFile" enctype="multipart/form-data">
+      <input type="file" id="jsonFile" rows="50" cols="50"></textarea>
+      <input id="submitJSON" type="submit" value="Submit">
     </form>
     <button id="latest">Get Latest File</button>`;
   }
@@ -13,36 +17,65 @@ let view = {
 let controller = {
   initialize: () => {
     view.appendFormToBody();
+    controller.listeners.getLatest();
+    controller.listeners.submitFile();
+    controller.listeners.submitText();
+  },
 
-    $('#submitJSON').on('submit', (e) => {
-      e.preventDefault();
-      var jsonData = $('#json').val();
-      $.ajax({
-        method: 'POST',
-        url: '/json',
-        data: {json: jsonData},
-        success: (data) => {
-          if ($('#jsonTable').length > 0) {
-            $('#jsonTable').detach();
+  listeners: {
+    getLatest: () => {
+      $('#latest').on('click', (r) => {
+        $.ajax({
+          method: 'GET',
+          url: '/latest',
+          success: (data) => {
+            if ($('#jsonTable').length > 0) {
+              $('#jsonTable').detach();
+            }
+            $(data).appendTo('body');
           }
-          $(data).appendTo('body');
-        }
+        });
       });
-    });
-
-    $('#latest').on('click', (r) => {
-      $.ajax({
-        method: 'GET',
-        url: '/latest',
-        success: (data) => {
-          if ($('#jsonTable').length > 0) {
-            $('#jsonTable').detach();
+    },
+    submitFile: () => {
+      $('#submitJSONFile').on('submit', (e) => {
+        e.preventDefault();
+        var file = document.getElementById('jsonFile').files[0];
+        file.text()
+          .then((jsonData) => {
+            $.ajax({
+              method: 'POST',
+              url: '/json',
+              data: {json: jsonData},
+              success: (data) => {
+                if ($('#jsonTable').length > 0) {
+                  $('#jsonTable').detach();
+                }
+                $(data).appendTo('body');
+              }
+            });
+          });
+      });
+    },
+    submitText: () => {
+      $('#submitJSON').on('submit', (e) => {
+        e.preventDefault();
+        var jsonData = $('#json').val();
+        $.ajax({
+          method: 'POST',
+          url: '/json',
+          data: {json: jsonData},
+          success: (data) => {
+            if ($('#jsonTable').length > 0) {
+              $('#jsonTable').detach();
+            }
+            $(data).appendTo('body');
           }
-          $(data).appendTo('body');
-        }
+        });
       });
-    });
+    }
   }
+
 };
 
 controller.initialize();
