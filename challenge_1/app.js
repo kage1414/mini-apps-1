@@ -3,12 +3,25 @@ let model = {
   gameOver: false,
   winner: undefined,
   winnerAlerted: false,
+  occupiedSpaces: [],
+  currentPlayer: 'X',
   occupiedSpaces: [
     ['', '', ''],
     ['', '', ''],
     ['', '', '']
   ],
-  currentPlayer: 'X'
+  initialize: () => {
+    model.moveCounter = 0;
+    model.gameOver = false;
+    model.winner = undefined;
+    model.winnerAlerted = false;
+    model.occupiedSpaces = [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', '']
+    ];
+    model.currentPlayer = 'X';
+  }
 };
 
 let controller = {
@@ -125,24 +138,14 @@ let controller = {
     }
   },
 
-  initialize: (boardSize = 3) => {
-    model.moveCounter = 0;
-    model.gameOver = false;
-    model.winner = undefined;
-    model.winnerAlerted = false;
-    model.occupiedSpaces = [
-      ['', '', ''],
-      ['', '', ''],
-      ['', '', '']
-    ];
-    model.currentPlayer = 'X';
+  initialize: () => {
     controller.addClickHandlersToCells();
   }
 };
 
 let view = {
-  initialize: (boardSize = 3) => {
-    view.appendBoard(boardSize);
+  initialize: () => {
+    view.appendBoard();
     view.appendResetButton();
   },
   appendResetButton: () => {
@@ -152,15 +155,16 @@ let view = {
     document.body.appendChild(resetButton);
   },
 
-  appendBoard: (boardSize) => {
+  appendBoard: () => {
+    // Written while using DOM to track moves. Will refactor to render and reflect model.occupiedSpaces.
     let table = document.createElement('table');
     document.body.appendChild(table);
     let i = 0;
-    while (i < boardSize) {
+    while (i < 3) {
       let row = document.createElement('tr');
 
       let j = 0;
-      while (j < boardSize) {
+      while (j < 3) {
         let cell = document.createElement('td');
         cell.innerHTML = '';
         cell.setAttribute('class', 'cell');
@@ -177,12 +181,14 @@ let view = {
     }
   },
 
-  resetDOM: (boardSize) => {
+  resetDOM: () => {
     controller.removeDOMElements();
-    view.initialize(boardSize);
-    controller.initialize(boardSize);
+    model.initialize();
+    view.initialize();
+    controller.initialize();
   }
 };
 
+model.initialize();
 view.initialize();
 controller.initialize();
