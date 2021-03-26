@@ -1,6 +1,24 @@
 const _ = require('lodash');
 
-module.exports.jsonToCsv = (json, filter) => {
+let filter = (lines, filterParam) => {
+  let idxToDelete = [];
+
+  _.each(lines, (line) => {
+    if (line.includes(filterParam)) {
+      idxToDelete.push(lines.indexOf(line));
+    }
+  });
+
+  for (var i = lines.length; i >= 0; i--) {
+    if (idxToDelete.includes[i]) {
+      lines.splice(i, 1);
+    }
+  }
+
+  return lines;
+};
+
+module.exports.jsonToCsv = (json, filterParam) => {
   let parsed = JSON.parse(json);
   let idxReference = [];
   let keys = Object.keys(parsed);
@@ -42,12 +60,10 @@ module.exports.jsonToCsv = (json, filter) => {
     }
 
 
-    if (!valArray.includes(filter)) {
-      valArray.unshift(uniqueInteger);
-      parentId = valArray[0];
-      uniqueInteger++;
-      lines.push(valArray.join(','));
-    }
+    valArray.unshift(uniqueInteger);
+    parentId = valArray[0];
+    uniqueInteger++;
+    lines.push(valArray.join(','));
 
     if (json.children.length > 0) {
       _.each(json.children, (child) => {
@@ -60,6 +76,7 @@ module.exports.jsonToCsv = (json, filter) => {
   idxReference.push('parent');
   idxReference.unshift('0');
   lines.unshift(idxReference.join(','));
+  lines = filter(lines, filterParam);
 
   return lines.join('\n');
 };

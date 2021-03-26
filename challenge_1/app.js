@@ -1,35 +1,47 @@
-let model = {
-  moveCounter: 0,
-  gameOver: false,
-  winner: undefined,
-  winnerAlerted: false,
-  occupiedSpaces: [],
-  currentPlayer: 'X',
-  occupiedSpaces: [
-    ['', '', ''],
-    ['', '', ''],
-    ['', '', '']
-  ],
-  initialize: () => {
-    model.moveCounter = 0;
-    model.gameOver = false;
-    model.winner = undefined;
-    model.winnerAlerted = false;
-    model.occupiedSpaces = [
+class Model {
+
+  constructor () {
+    this.moveCounter = 0;
+    this.gameOver = false;
+    this.winner = undefined;
+    this.winnerAlerted = false;
+    this.currentPlayer = 'X';
+    this.board = [
       ['', '', ''],
       ['', '', ''],
       ['', '', '']
     ];
-    model.currentPlayer = 'X';
   }
-};
+
+  checkForWinner() {
+    if (controller.win.row() || controller.win.col() || controller.win.minDiag() || controller.win.majDiag()) {
+      this.setGameOver();
+    }
+  }
+
+  nextMove() {
+    // view.renderBoard();
+    if (this.moveCounter % 2 === 1) {
+      this.currentPlayer = 'X';
+    } else {
+      this.currentPlayer = 'O';
+    }
+    this.moveCounter++;
+  }
+
+  setGameOver() {
+    this.gameOver = true;
+    this.winner = this.currentPlayer;
+  }
+}
+
+
 
 let controller = {
   addClickHandlersToCells: () => {
     let cells = document.getElementsByClassName('cell');
     for (let i = 0; i < cells.length; i++) {
       cells[i].addEventListener('click', (e) => {
-        // console.log(e)
         controller.clickHandler(e.target);
       });
     }
@@ -40,17 +52,11 @@ let controller = {
     if (!controller.isOccupied(target) && !model.gameOver) {
       let row = target.attributes.row.value;
       let column = target.attributes.column.value;
-      model.occupiedSpaces[row][column] = model.currentPlayer;
+      model.board[row][column] = model.currentPlayer;
       target.innerHTML = model.currentPlayer;
-      controller.checkForWinner();
+      model.checkForWinner();
 
-      if (model.moveCounter % 2 === 1) {
-        model.currentPlayer = 'X';
-      } else {
-        model.currentPlayer = 'O';
-      }
-
-      model.moveCounter++;
+      model.nextMove();
 
     } else if (!model.gameOver) {
       alert('Space taken. Please choose another space.');
@@ -66,36 +72,25 @@ let controller = {
   },
 
   removeDOMElements: () => {
-    while (document.body.firstChild) {
-      document.body.firstChild.remove();
-    }
+    document.body.innerHTML = '';
   },
 
   isOccupied: (target) => {
     let row = target.attributes.row.value;
     let column = target.attributes.column.value;
-    if (model.occupiedSpaces[row][column] !== '') {
+    if (model.board[row][column] === 'X' || model.board[row][column] === 'O') {
       return true;
     }
     return false;
   },
 
-  checkForWinner: (player) => {
-    if (controller.win.row() || controller.win.col() || controller.win.minDiag() || controller.win.majDiag()) {
-      model.gameOver = true;
-      model.winner = model.currentPlayer;
-    }
-
-  },
-
   win: {
     row: () => {
-      for (let i = 0; i < model.occupiedSpaces.length; i++) {
-        for (let j = 0; j < model.occupiedSpaces[i].length; j++) {
-          if (model.occupiedSpaces[i][j] !== model.currentPlayer) {
+      for (let i = 0; i < model.board.length; i++) {
+        for (let j = 0; j < model.board[i].length; j++) {
+          if (model.board[i][j] !== model.currentPlayer) {
             break;
-          } else if (model.occupiedSpaces[i][j] === model.currentPlayer && j === model.occupiedSpaces[i].length - 1) {
-            console.log('true');
+          } else if (model.board[i][j] === model.currentPlayer && j === model.board[i].length - 1) {
             return true;
           }
         }
@@ -103,11 +98,11 @@ let controller = {
       return false;
     },
     col: () => {
-      for (let i = 0; i < model.occupiedSpaces.length; i++) {
-        for (let j = 0; j < model.occupiedSpaces[i].length; j++) {
-          if (model.occupiedSpaces[j][i] !== model.currentPlayer) {
+      for (let i = 0; i < model.board.length; i++) {
+        for (let j = 0; j < model.board[i].length; j++) {
+          if (model.board[j][i] !== model.currentPlayer) {
             break;
-          } else if (model.occupiedSpaces[j][i] === model.currentPlayer && j === model.occupiedSpaces[j].length - 1) {
+          } else if (model.board[j][i] === model.currentPlayer && j === model.board[j].length - 1) {
             return true;
           }
         }
@@ -115,10 +110,10 @@ let controller = {
       return false;
     },
     majDiag: () => {
-      for (let i = 0; i < model.occupiedSpaces.length; i++) {
-        if (model.occupiedSpaces[i][(model.occupiedSpaces.length - 1) - i] !== model.currentPlayer) {
+      for (let i = 0; i < model.board.length; i++) {
+        if (model.board[i][(model.board.length - 1) - i] !== model.currentPlayer) {
           break;
-        } else if (i === model.occupiedSpaces.length - 1 && model.occupiedSpaces[i][(model.occupiedSpaces.length - 1) - i] === model.currentPlayer) {
+        } else if (i === model.board.length - 1 && model.board[i][(model.board.length - 1) - i] === model.currentPlayer) {
           return true;
         }
       }
@@ -126,28 +121,33 @@ let controller = {
       return false;
     },
     minDiag: () => {
-      for (let i = 0; i < model.occupiedSpaces.length; i++) {
-        if (model.occupiedSpaces[i][i] !== model.currentPlayer) {
+      for (let i = 0; i < model.board.length; i++) {
+        if (model.board[i][i] !== model.currentPlayer) {
           break;
-        } else if (i === model.occupiedSpaces.length - 1 && model.occupiedSpaces[i][i] === model.currentPlayer) {
+        } else if (i === model.board.length - 1 && model.board[i][i] === model.currentPlayer) {
           return true;
         }
       }
 
       return false;
     }
-  },
-
-  initialize: () => {
-    controller.addClickHandlersToCells();
   }
 };
 
 let view = {
   initialize: () => {
-    view.appendBoard();
+    view.renderBoard();
     view.appendResetButton();
   },
+
+  setCellAttributes: (cell, row, col) => {
+    cell.setAttribute('class', 'cell');
+    cell.setAttribute('style', 'height: 180px; width: 180px; text-align: center; padding: auto; font-size: 100px; background-color: #d9d9d9;');
+    cell.setAttribute('row', row);
+    cell.setAttribute('column', col);
+    return cell;
+  },
+
   appendResetButton: () => {
     let resetButton = document.createElement('button');
     resetButton.innerHTML = 'Reset';
@@ -155,40 +155,39 @@ let view = {
     document.body.appendChild(resetButton);
   },
 
-  appendBoard: () => {
-    // Written while using DOM to track moves. Will refactor to render and reflect model.occupiedSpaces.
+  renderBoard: () => {
+    // Written while using DOM to track moves. Will refactor to render and reflect model.board.
+    if (document.getElementById('board')) {
+      document.getElementById('board').remove();
+    }
     let table = document.createElement('table');
-    document.body.appendChild(table);
-    let i = 0;
-    while (i < 3) {
+    table.setAttribute('id', 'board');
+    document.body.prepend(table);
+    for (let i = 0; i < 3; i++) {
       let row = document.createElement('tr');
 
-      let j = 0;
-      while (j < 3) {
+      for (let j = 0; j < 3; j++) {
         let cell = document.createElement('td');
-        cell.innerHTML = '';
-        cell.setAttribute('class', 'cell');
-        cell.setAttribute('style', 'height: 180px; width: 180px; text-align: center; vertical-align: sub; font-size: 100px; background-color: #d9d9d9;');
-        cell.setAttribute('row', i);
-        cell.setAttribute('column', j);
+        cell.innerHTML = model.board[i][j];
+        cell = view.setCellAttributes(cell, i, j);
         row.appendChild(cell);
-        j++;
       }
 
       row.setAttribute('class', i);
       table.appendChild(row);
-      i++;
     }
+    controller.addClickHandlersToCells();
   },
 
   resetDOM: () => {
     controller.removeDOMElements();
-    model.initialize();
+    model = new Model();
     view.initialize();
-    controller.initialize();
   }
 };
 
-model.initialize();
+let model = new Model();
 view.initialize();
-controller.initialize();
+
+
+///////////////////////////////////////////////////////////////////
