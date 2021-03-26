@@ -1,38 +1,49 @@
+let model = {
+  csvTableData: '',
+  initialHtml: `<h1>Submit JSON</h1>
+  <form id="submitJSON" enctype="multipart/form-data">
+    <textarea id="json" rows="50" cols="50"></textarea>
+    <input id="submitText" type="submit" value="Submit">
+  </form>
+  <form id="submitJSONFile" enctype="multipart/form-data">
+    <input type="file" id="jsonFile" rows="50" cols="50"></textarea>
+    <input id="submitJSON" type="submit" value="Submit">
+  </form>
+  <button id="latest">Get Latest File</button>
+  <div id="csvDiv"></div>`
+};
+
 let view = {
   appendFormToBody: () => {
-    document.body.innerHTML =
-    `<h1>Submit JSON</h1>
-    <form id="submitJSON" enctype="multipart/form-data">
-      <textarea id="json" rows="50" cols="50"></textarea>
-      <input id="submitText" type="submit" value="Submit">
-    </form>
-    <form id="submitJSONFile" enctype="multipart/form-data">
-      <input type="file" id="jsonFile" rows="50" cols="50"></textarea>
-      <input id="submitJSON" type="submit" value="Submit">
-    </form>
-    <button id="latest">Get Latest File</button>`;
+    document.body.innerHTML = model.initialHtml;
+  },
+  appendCsvDiv: () => {
+    var $children = $('#csvDiv').children().detach();
+    $(model.csvTableData).appendTo('#csvDiv');
   }
 };
 
 let controller = {
   initialize: () => {
-    view.appendFormToBody();
-    controller.listeners.getLatest();
-    controller.listeners.submitFile();
-    controller.listeners.submitText();
+    $(document).ready(() => {
+      view.appendFormToBody();
+      view.appendCsvDiv();
+      controller.listeners.getLatest();
+      controller.listeners.submitFile();
+      controller.listeners.submitText();
+    });
   },
 
   listeners: {
     getLatest: () => {
-      $('#latest').on('click', (r) => {
+      $('#latest').on('click', (e) => {
+        e.preventDefault();
         $.ajax({
           method: 'GET',
           url: '/latest',
           success: (data) => {
-            if ($('#jsonTable').length > 0) {
-              $('#jsonTable').detach();
-            }
-            $(data).appendTo('body');
+            model.csvTableData = data;
+            view.appendCsvDiv();
           }
         });
       });
@@ -48,10 +59,8 @@ let controller = {
               url: '/json',
               data: {json: jsonData},
               success: (data) => {
-                if ($('#jsonTable').length > 0) {
-                  $('#jsonTable').detach();
-                }
-                $(data).appendTo('body');
+                model.csvTableData = data;
+                view.appendCsvDiv();
               }
             });
           });
@@ -66,10 +75,8 @@ let controller = {
           url: '/json',
           data: {json: jsonData},
           success: (data) => {
-            if ($('#jsonTable').length > 0) {
-              $('#jsonTable').detach();
-            }
-            $(data).appendTo('body');
+            model.csvTableData = data;
+            view.appendCsvDiv();
           }
         });
       });
