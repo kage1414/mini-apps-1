@@ -57,6 +57,20 @@ module.exports.jsonFileToCsv = (json) => {
   return module.exports.jsonToCsv(string);
 };
 
-module.exports.createFilename = (filename) => {
-  return filename.split('.')[0] + '.csv';
+module.exports.csvToHtml = (csv) => {
+  csv = csv.toString();
+  let rows = csv.split('\n');
+  var tableRows = _.map(rows, (row) => {
+    var cells = row.split(',');
+    var cells = _.map(cells, (cell) => {
+      return '<td>' + cell + '</td>';
+    });
+
+    return '<tr>' + cells.join('') + '</tr>';
+  });
+  tableRows.unshift('<table id="jsonTable">');
+  tableRows.push('</table>');
+  return tableRows.join('');
 };
+
+

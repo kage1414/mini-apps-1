@@ -22,29 +22,24 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/json', (req, res, next) => {
-  // console.log(req.body);
   var csvData = csv.jsonToCsv(req.body.json);
   fs.writeFile('./latest.csv', csvData, (err) => {
     if (err) {
       console.log(err);
     }
   });
-  // console.log(csvData);
-  res.type('text/csv');
-  res.send(csvData);
+  let html = csv.csvToHtml(csvData);
+  res.send(html);
   next();
 });
 
 app.get('/latest', (req, res, next) => {
-  fs.readFile('./latest.csv', (err, data) => {
-    if (err) {
-      console.log(err);
-    }
-    res.type('text/csv');
-    res.attachment('latest.csv');
-    res.send(data);
+  fs.readFile(path.join(__dirname, 'latest.csv'), (err, data) => {
+    let html = csv.csvToHtml(data);
+    res.send(html);
     next();
   });
+
 });
 
 app.listen(PORT, (err) => {
