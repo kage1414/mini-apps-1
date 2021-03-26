@@ -1,3 +1,4 @@
+// Review
 let model = {
   csvTableData: '',
   initialHtml: `<h1>Submit JSON</h1>
@@ -14,7 +15,7 @@ let model = {
 };
 
 let view = {
-  appendFormToBody: () => {
+  initialize: () => {
     document.body.innerHTML = model.initialHtml;
   },
   appendCsvDiv: () => {
@@ -26,15 +27,17 @@ let view = {
 let controller = {
   initialize: () => {
     $(document).ready(() => {
-      view.appendFormToBody();
-      view.appendCsvDiv();
-      controller.listeners.getLatest();
-      controller.listeners.submitFile();
-      controller.listeners.submitText();
+      view.initialize();
+      controller.listeners.initialize();
     });
   },
 
   listeners: {
+    initialize: () => {
+      controller.listeners.getLatest();
+      controller.listeners.submitFile();
+      controller.listeners.submitText();
+    },
     getLatest: () => {
       $('#latest').on('click', (e) => {
         e.preventDefault();
