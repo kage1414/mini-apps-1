@@ -1,52 +1,24 @@
-let model = {};
-
-let view = {
-  appendResetButton: () => {
-    let resetButton = document.createElement('button');
-    resetButton.innerHTML = 'Reset';
-    resetButton.setAttribute('onclick', 'view.resetDOM()');
-    document.body.appendChild(resetButton);
-  },
-
-  appendBoard: (boardSize) => {
-    let table = document.createElement('table');
-    document.body.appendChild(table);
-    let i = 0;
-    while (i < boardSize) {
-      let row = document.createElement('tr');
-
-      let j = 0;
-      while (j < boardSize) {
-        let cell = document.createElement('td');
-        cell.innerHTML = '';
-        cell.setAttribute('class', 'cell');
-        cell.setAttribute('style', 'height: 180px; width: 180px; text-align: center; vertical-align: sub; font-size: 100px; background-color: #d9d9d9;');
-        cell.setAttribute('row', i);
-        cell.setAttribute('column', j);
-        row.appendChild(cell);
-        j++
-      }
-
-      row.setAttribute('class', i);
-      table.appendChild(row);
-      i++;
-    }
-  },
-
-  resetDOM: (boardSize) => {
-    controller.removeDOMElements();
-    controller.initialize(boardSize);
-  }
-}
+let model = {
+  moveCounter: 0,
+  gameOver: false,
+  winner: undefined,
+  winnerAlerted: false,
+  occupiedSpaces: [
+    ['', '', ''],
+    ['', '', ''],
+    ['', '', '']
+  ],
+  currentPlayer: 'X'
+};
 
 let controller = {
   addClickHandlersToCells: () => {
-    let cells = document.getElementsByClassName('cell')
+    let cells = document.getElementsByClassName('cell');
     for (let i = 0; i < cells.length; i++) {
       cells[i].addEventListener('click', (e) => {
         // console.log(e)
-        controller.clickHandler(e.target)
-      })
+        controller.clickHandler(e.target);
+      });
     }
   },
 
@@ -60,7 +32,7 @@ let controller = {
       controller.checkForWinner();
 
       if (model.moveCounter % 2 === 1) {
-        model.currentPlayer= 'X';
+        model.currentPlayer = 'X';
       } else {
         model.currentPlayer = 'O';
       }
@@ -74,14 +46,14 @@ let controller = {
     if (model.gameOver && !model.winnerAlerted) {
       setTimeout(() => {
         alert(`${model.winner} is the winner!`);
-      }, 0)
+      }, 0);
       model.winnerAlerted = true;
     }
 
   },
 
   removeDOMElements: () => {
-    while(document.body.firstChild) {
+    while (document.body.firstChild) {
       document.body.firstChild.remove();
     }
   },
@@ -110,7 +82,7 @@ let controller = {
           if (model.occupiedSpaces[i][j] !== model.currentPlayer) {
             break;
           } else if (model.occupiedSpaces[i][j] === model.currentPlayer && j === model.occupiedSpaces[i].length - 1) {
-            console.log('true')
+            console.log('true');
             return true;
           }
         }
@@ -164,10 +136,53 @@ let controller = {
       ['', '', '']
     ];
     model.currentPlayer = 'X';
-    view.appendBoard(boardSize);
-    view.appendResetButton();
     controller.addClickHandlersToCells();
   }
-}
+};
 
+let view = {
+  initialize: (boardSize = 3) => {
+    view.appendBoard(boardSize);
+    view.appendResetButton();
+  },
+  appendResetButton: () => {
+    let resetButton = document.createElement('button');
+    resetButton.innerHTML = 'Reset';
+    resetButton.setAttribute('onclick', 'view.resetDOM()');
+    document.body.appendChild(resetButton);
+  },
+
+  appendBoard: (boardSize) => {
+    let table = document.createElement('table');
+    document.body.appendChild(table);
+    let i = 0;
+    while (i < boardSize) {
+      let row = document.createElement('tr');
+
+      let j = 0;
+      while (j < boardSize) {
+        let cell = document.createElement('td');
+        cell.innerHTML = '';
+        cell.setAttribute('class', 'cell');
+        cell.setAttribute('style', 'height: 180px; width: 180px; text-align: center; vertical-align: sub; font-size: 100px; background-color: #d9d9d9;');
+        cell.setAttribute('row', i);
+        cell.setAttribute('column', j);
+        row.appendChild(cell);
+        j++;
+      }
+
+      row.setAttribute('class', i);
+      table.appendChild(row);
+      i++;
+    }
+  },
+
+  resetDOM: (boardSize) => {
+    controller.removeDOMElements();
+    view.initialize(boardSize);
+    controller.initialize(boardSize);
+  }
+};
+
+view.initialize();
 controller.initialize();
