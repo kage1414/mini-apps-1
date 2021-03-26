@@ -22,7 +22,7 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/json', (req, res, next) => {
-  var csvData = csv.jsonToCsv(req.body.json);
+  var csvData = csv.jsonToCsv(req.body.json, req.body.filter);
   fs.writeFile('./latest.csv', csvData, (err) => {
     if (err) {
       console.log(err);

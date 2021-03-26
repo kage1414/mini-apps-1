@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-module.exports.jsonToCsv = (json) => {
+module.exports.jsonToCsv = (json, filter) => {
   let parsed = JSON.parse(json);
   let idxReference = [];
   let keys = Object.keys(parsed);
@@ -45,7 +45,9 @@ module.exports.jsonToCsv = (json) => {
     parentId = valArray[0];
     uniqueInteger++;
 
-    lines.push(valArray.join(','));
+    if (!valArray.includes(filter)) {
+      lines.push(valArray.join(','));
+    }
 
     if (json.children.length > 0) {
       _.each(json.children, (child) => {
