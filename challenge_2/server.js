@@ -35,9 +35,18 @@ app.post('/json', (req, res, next) => {
 
 app.get('/latest', (req, res, next) => {
   fs.readFile(path.join(__dirname, 'latest.csv'), (err, data) => {
-    let html = csv.csvToHtml(data);
-    res.send(html);
-    next();
+    if (err) {
+      console.log(err);
+    }
+
+    if (data) {
+      let html = csv.csvToHtml(data);
+      res.send(html);
+      next();
+    } else {
+      res.send('<div id="jsonTable">No previous data saved on server</div>');
+      next();
+    }
   });
 
 });
