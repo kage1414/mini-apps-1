@@ -17,7 +17,7 @@ module.exports.jsonToCsv = (json) => {
   let lines = [];
 
   // Render subsequent lines of children
-  let writeValues = (json) => {
+  let writeValues = (json, parent) => {
     var valArray = [];
 
     for (var key in json) {
@@ -37,19 +37,25 @@ module.exports.jsonToCsv = (json) => {
       }
     }
 
+    if (parent) {
+      valArray.push(parent);
+    }
+
     valArray.unshift(uniqueInteger);
+    parentId = valArray[0];
     uniqueInteger++;
 
     lines.push(valArray.join(','));
 
     if (json.children.length > 0) {
       _.each(json.children, (child) => {
-        writeValues(child);
+        writeValues(child, parentId);
       });
     }
   };
 
   writeValues(parsed);
+  idxReference.push('parent');
   idxReference.unshift('0');
   lines.unshift(idxReference.join(','));
 
