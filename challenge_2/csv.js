@@ -41,11 +41,11 @@ module.exports.jsonToCsv = (json, filter) => {
       valArray.push(parent);
     }
 
-    valArray.unshift(uniqueInteger);
-    parentId = valArray[0];
-    uniqueInteger++;
 
     if (!valArray.includes(filter)) {
+      valArray.unshift(uniqueInteger);
+      parentId = valArray[0];
+      uniqueInteger++;
       lines.push(valArray.join(','));
     }
 
