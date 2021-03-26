@@ -4,19 +4,19 @@ module.exports.jsonToCsv = (json) => {
   let parsed = JSON.parse(json);
   let idxReference = [];
   let keys = Object.keys(parsed);
+  let uniqueInteger = 1;
 
-  _.map(keys, (key) => {
+  _.each(keys, (key) => {
     if (key !== 'children') {
       idxReference.push(key);
     }
   });
 
+
   // Render first line of csv
   let lines = [];
-  lines.push(idxReference.join(','));
 
   // Render subsequent lines of children
-
   let writeValues = (json) => {
     var valArray = [];
 
@@ -37,6 +37,9 @@ module.exports.jsonToCsv = (json) => {
       }
     }
 
+    valArray.unshift(uniqueInteger);
+    uniqueInteger++;
+
     lines.push(valArray.join(','));
 
     if (json.children.length > 0) {
@@ -47,6 +50,8 @@ module.exports.jsonToCsv = (json) => {
   };
 
   writeValues(parsed);
+  idxReference.unshift('0');
+  lines.unshift(idxReference.join(','));
 
   return lines.join('\n');
 };
