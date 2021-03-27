@@ -5,20 +5,20 @@ class View {
     this.appendResetButton();
   }
 
-  renderBoard() {
+  renderBoard() { //
     this.removeBoard();
     this.createTable();
     this.addClickHandlersToCells();
   }
 
-  appendResetButton() {
+  appendResetButton() { //
     const resetButton = document.createElement('button');
     resetButton.innerHTML = 'Reset';
     resetButton.setAttribute('onclick', 'controller.resetGame()');
     document.body.appendChild(resetButton);
   }
 
-  setCellAttributes(cell, row, col) {
+  setCellAttributes(cell, row, col) { //
     cell.setAttribute('class', 'cell');
     cell.setAttribute('style', 'height: 180px; width: 180px; text-align: center; padding: auto; font-size: 100px; background-color: #d9d9d9;');
     cell.setAttribute('row', row);
@@ -26,7 +26,7 @@ class View {
     return cell;
   }
 
-  addClickHandlersToCells() {
+  addClickHandlersToCells() { //
     const cells = document.getElementsByClassName('cell');
     for (let i = 0; i < cells.length; i++) {
       cells[i].addEventListener('click', (e) => {
@@ -35,13 +35,13 @@ class View {
     }
   }
 
-  removeBoard() {
+  removeBoard() { //
     if (document.getElementById('board')) {
       document.getElementById('board').remove();
     }
   }
 
-  createTable() {
+  createTable() { //
     const table = document.createElement('table');
     table.setAttribute('id', 'board');
     for (let i = 0; i < 3; i++) {
@@ -59,11 +59,11 @@ class View {
     document.body.prepend(table);
   }
 
-  spaceOccupied() {
+  spaceOccupied() { //
     alert('Space taken. Please choose another space.');
   }
 
-  alertWinner(winner) {
+  alertWinner(winner) { //
     setTimeout(() => {
       alert(`${winner} is the winner!`);
     }, 0);
