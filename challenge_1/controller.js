@@ -5,11 +5,11 @@ class Controller {
     view.renderBoard();
   }
 
-  clickHandler(target) { //
+  clickHandler(target) {
     this.move(target);
   }
 
-  move(target) { //
+  move(target) {
 
     if (!model.gameOver) {
       if (this.spaceIsFree(target)) {
@@ -31,24 +31,24 @@ class Controller {
 
   }
 
-  checkForWinner() { //
+  checkForWinner() {
     if (this.rowWin() || this.colWin() || this.minDiagWin() || this.majDiagWin()) {
       this.setGameOver();
     }
   }
 
-  setSpace(target) { //
+  setSpace(target) {
     const row = target.attributes.row.value;
     const column = target.attributes.column.value;
     model.board[row][column] = model.currentPlayer;
     target.innerHTML = model.currentPlayer;
   }
 
-  spaceIsFree(target) { //
+  spaceIsFree(target) {
     return !this.isOccupied(target) && !model.gameOver;
   }
 
-  prepareNextMove() { //
+  prepareNextMove() {
     if (model.moveCounter % 2 === 1) {
       model.currentPlayer = 'X';
     } else {
@@ -57,7 +57,7 @@ class Controller {
     model.moveCounter++;
   }
 
-  isOccupied(target) { //
+  isOccupied(target) {
     const row = target.attributes.row.value;
     const column = target.attributes.column.value;
     if (model.board[row][column] === 'X' || model.board[row][column] === 'O') {
