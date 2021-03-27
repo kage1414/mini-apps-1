@@ -1,9 +1,5 @@
 class Controller {
 
-  constructor() {
-
-  }
-
   resetGame() {
     model = new Model();
     view.renderBoard();
