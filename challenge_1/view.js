@@ -5,10 +5,13 @@ class View {
     this.appendResetButton();
   }
 
-  renderBoard() {
+  renderBoard(callback) {
     this.removeBoard();
     this.createTable();
     this.addClickHandlersToCells();
+    if (callback) {
+      callback();
+    }
   }
 
   appendResetButton() {

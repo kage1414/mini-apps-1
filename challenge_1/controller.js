@@ -14,9 +14,9 @@ class Controller {
     if (!model.gameOver) {
       if (this.spaceIsFree(target)) {
         this.setSpace(target);
+        this.prepareNextMove();
         this.checkForWinner();
         this.checkForTie();
-        this.prepareNextMove();
         view.renderBoard();
       } else {
         view.spaceOccupied();
@@ -47,15 +47,6 @@ class Controller {
     return !this.isOccupied(target) && !model.gameOver;
   }
 
-  prepareNextMove() {
-    if (model.moveCounter % 2 === 1) {
-      model.currentPlayer = 'X';
-    } else {
-      model.currentPlayer = 'O';
-    }
-    model.moveCounter++;
-  }
-
   isOccupied(target) {
     const row = target.attributes.row.value;
     const column = target.attributes.column.value;
@@ -65,6 +56,15 @@ class Controller {
     return false;
   }
 
+  prepareNextMove() {
+    if (model.moveCounter % 2 === 1) {
+      model.currentPlayer = 'X';
+    } else {
+      model.currentPlayer = 'O';
+    }
+    model.moveCounter++;
+  }
+
   checkForWinner() {
     if (this.rowWin() || this.colWin() || this.minDiagWin() || this.majDiagWin()) {
       this.setGameOver();
@@ -72,7 +72,7 @@ class Controller {
   }
 
   checkForTie() {
-    if (this.allSpacesOccupied()) {
+    if (model.moveCounter === 9) {
       this.setTie();
     }
   }
