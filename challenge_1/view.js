@@ -68,4 +68,10 @@ class View {
       alert(`${winner} is the winner!`);
     }, 0);
   }
+
+  alertTie() {
+    setTimeout(() => {
+      alert('Tie!');
+    }, 0);
+  }
 }

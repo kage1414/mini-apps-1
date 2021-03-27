@@ -15,6 +15,7 @@ class Controller {
       if (this.spaceIsFree(target)) {
         this.setSpace(target);
         this.checkForWinner();
+        this.checkForTie();
         this.prepareNextMove();
         view.renderBoard();
       } else {
@@ -22,19 +23,17 @@ class Controller {
       }
     }
 
-    if (model.gameOver) {
-      if (!model.winnerAlerted) {
+    if (model.gameOver && !model.winnerAlerted) {
+      if (model.winner) {
         view.alertWinner(model.winner);
+        model.winnerAlerted = true;
+      }
+      if (model.tie) {
+        view.alertTie();
         model.winnerAlerted = true;
       }
     }
 
-  }
-
-  checkForWinner() {
-    if (this.rowWin() || this.colWin() || this.minDiagWin() || this.majDiagWin()) {
-      this.setGameOver();
-    }
   }
 
   setSpace(target) {
@@ -66,9 +65,37 @@ class Controller {
     return false;
   }
 
+  checkForWinner() {
+    if (this.rowWin() || this.colWin() || this.minDiagWin() || this.majDiagWin()) {
+      this.setGameOver();
+    }
+  }
+
+  checkForTie() {
+    if (this.allSpacesOccupied()) {
+      this.setTie();
+    }
+  }
+
   setGameOver() {
     model.gameOver = true;
     model.winner = model.currentPlayer;
+  }
+
+  setTie() {
+    model.tie = true;
+    model.gameOver = true;
+  }
+
+  allSpacesOccupied() {
+    for (let i = 0; i < model.board.length; i++) {
+      for (let j = 0; j < model.board[i].length; j++) {
+        if (model.board[i][j] === '') {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   rowWin() {
