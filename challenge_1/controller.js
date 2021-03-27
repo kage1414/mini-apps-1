@@ -6,6 +6,6 @@ let controller = {
   },
 
   clickHandler: (target) => {
-    model.clickHandler(target);
+    model.move(target);
   }
 };

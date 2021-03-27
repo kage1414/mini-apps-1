@@ -19,13 +19,14 @@ class Model {
     }
   }
 
-  clickHandler(target) {
+  move(target) {
 
     if (!this.gameOver) {
       if (this.spaceIsFree(target)) {
         this.setSpace(target);
         this.checkForWinner();
         this.prepareNextMove();
+        view.renderBoard();
       } else {
         view.spaceOccupied();
       }
@@ -38,14 +39,13 @@ class Model {
       }
     }
 
-    view.renderBoard();
   }
 
   setSpace(target) {
-    let row = target.attributes.row.value;
-    let column = target.attributes.column.value;
+    const row = target.attributes.row.value;
+    const column = target.attributes.column.value;
     this.board[row][column] = this.currentPlayer;
-    target.innerHTML = model.currentPlayer;
+    target.innerHTML = this.currentPlayer;
   }
 
   spaceIsFree(target) {
@@ -62,9 +62,9 @@ class Model {
   }
 
   isOccupied(target) {
-    let row = target.attributes.row.value;
-    let column = target.attributes.column.value;
-    if (model.board[row][column] === 'X' || model.board[row][column] === 'O') {
+    const row = target.attributes.row.value;
+    const column = target.attributes.column.value;
+    if (this.board[row][column] === 'X' || this.board[row][column] === 'O') {
       return true;
     }
     return false;
@@ -76,11 +76,11 @@ class Model {
   }
 
   rowWin() {
-    for (let i = 0; i < model.board.length; i++) {
-      for (let j = 0; j < model.board[i].length; j++) {
-        if (model.board[i][j] !== model.currentPlayer) {
+    for (let i = 0; i < this.board.length; i++) {
+      for (let j = 0; j < this.board[i].length; j++) {
+        if (this.board[i][j] !== this.currentPlayer) {
           break;
-        } else if (model.board[i][j] === model.currentPlayer && j === model.board[i].length - 1) {
+        } else if (this.board[i][j] === this.currentPlayer && j === this.board[i].length - 1) {
           return true;
         }
       }
@@ -89,11 +89,11 @@ class Model {
   }
 
   colWin () {
-    for (let i = 0; i < model.board.length; i++) {
-      for (let j = 0; j < model.board[i].length; j++) {
-        if (model.board[j][i] !== model.currentPlayer) {
+    for (let i = 0; i < this.board.length; i++) {
+      for (let j = 0; j < this.board[i].length; j++) {
+        if (this.board[j][i] !== this.currentPlayer) {
           break;
-        } else if (model.board[j][i] === model.currentPlayer && j === model.board[j].length - 1) {
+        } else if (this.board[j][i] === this.currentPlayer && j === this.board[j].length - 1) {
           return true;
         }
       }
@@ -102,10 +102,10 @@ class Model {
   }
 
   majDiagWin () {
-    for (let i = 0; i < model.board.length; i++) {
-      if (model.board[i][(model.board.length - 1) - i] !== model.currentPlayer) {
+    for (let i = 0; i < this.board.length; i++) {
+      if (this.board[i][(this.board.length - 1) - i] !== this.currentPlayer) {
         break;
-      } else if (i === model.board.length - 1 && model.board[i][(model.board.length - 1) - i] === model.currentPlayer) {
+      } else if (i === this.board.length - 1 && this.board[i][(this.board.length - 1) - i] === this.currentPlayer) {
         return true;
       }
     }
@@ -113,10 +113,10 @@ class Model {
   }
 
   minDiagWin () {
-    for (let i = 0; i < model.board.length; i++) {
-      if (model.board[i][i] !== model.currentPlayer) {
+    for (let i = 0; i < this.board.length; i++) {
+      if (this.board[i][i] !== this.currentPlayer) {
         break;
-      } else if (i === model.board.length - 1 && model.board[i][i] === model.currentPlayer) {
+      } else if (i === this.board.length - 1 && this.board[i][i] === this.currentPlayer) {
         return true;
       }
     }

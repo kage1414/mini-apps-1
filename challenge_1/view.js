@@ -12,7 +12,7 @@ class View {
   }
 
   appendResetButton() {
-    let resetButton = document.createElement('button');
+    const resetButton = document.createElement('button');
     resetButton.innerHTML = 'Reset';
     resetButton.setAttribute('onclick', 'controller.resetGame()');
     document.body.appendChild(resetButton);
@@ -27,7 +27,7 @@ class View {
   }
 
   addClickHandlersToCells() {
-    let cells = document.getElementsByClassName('cell');
+    const cells = document.getElementsByClassName('cell');
     for (let i = 0; i < cells.length; i++) {
       cells[i].addEventListener('click', (e) => {
         controller.clickHandler(e.target);
@@ -42,7 +42,7 @@ class View {
   }
 
   createTable() {
-    let table = document.createElement('table');
+    const table = document.createElement('table');
     table.setAttribute('id', 'board');
     for (let i = 0; i < 3; i++) {
       let row = document.createElement('tr');
