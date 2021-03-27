@@ -134,28 +134,14 @@ let controller = {
   }
 };
 
-let view = {
-  initialize: () => {
-    view.renderBoard();
-    view.appendResetButton();
-  },
+class View {
 
-  setCellAttributes: (cell, row, col) => {
-    cell.setAttribute('class', 'cell');
-    cell.setAttribute('style', 'height: 180px; width: 180px; text-align: center; padding: auto; font-size: 100px; background-color: #d9d9d9;');
-    cell.setAttribute('row', row);
-    cell.setAttribute('column', col);
-    return cell;
-  },
+  constructor () {
+    this.renderBoard();
+    this.appendResetButton();
+  }
 
-  appendResetButton: () => {
-    let resetButton = document.createElement('button');
-    resetButton.innerHTML = 'Reset';
-    resetButton.setAttribute('onclick', 'view.resetDOM()');
-    document.body.appendChild(resetButton);
-  },
-
-  renderBoard: () => {
+  renderBoard() {
     // Written while using DOM to track moves. Will refactor to render and reflect model.board.
     if (document.getElementById('board')) {
       document.getElementById('board').remove();
@@ -177,17 +163,33 @@ let view = {
       table.appendChild(row);
     }
     controller.addClickHandlersToCells();
-  },
+  }
 
-  resetDOM: () => {
+  appendResetButton() {
+    let resetButton = document.createElement('button');
+    resetButton.innerHTML = 'Reset';
+    resetButton.setAttribute('onclick', 'view.resetDOM()');
+    document.body.appendChild(resetButton);
+  }
+
+  setCellAttributes(cell, row, col) {
+    cell.setAttribute('class', 'cell');
+    cell.setAttribute('style', 'height: 180px; width: 180px; text-align: center; padding: auto; font-size: 100px; background-color: #d9d9d9;');
+    cell.setAttribute('row', row);
+    cell.setAttribute('column', col);
+    return cell;
+  }
+
+  resetDOM() {
     controller.removeDOMElements();
     model = new Model();
     view.initialize();
   }
-};
+
+}
 
 let model = new Model();
-view.initialize();
+let view = new View();
 
 
 ///////////////////////////////////////////////////////////////////
