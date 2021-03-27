@@ -1,23 +1,41 @@
 const _ = require('lodash');
 
-module.exports.jsonToCsv = (json) => {
+let filter = (lines, filterParam) => {
+  let idxToDelete = [];
+
+  _.each(lines, (line) => {
+    if (line.includes(filterParam)) {
+      idxToDelete.push(lines.indexOf(line));
+    }
+  });
+
+  for (var i = lines.length; i >= 0; i--) {
+    if (idxToDelete.includes[i]) {
+      lines.splice(i, 1);
+    }
+  }
+
+  return lines;
+};
+
+module.exports.jsonToCsv = (json, filterParam) => {
   let parsed = JSON.parse(json);
   let idxReference = [];
   let keys = Object.keys(parsed);
+  let uniqueInteger = 1;
 
-  _.map(keys, (key) => {
+  _.each(keys, (key) => {
     if (key !== 'children') {
       idxReference.push(key);
     }
   });
 
+
   // Render first line of csv
   let lines = [];
-  lines.push(idxReference.join(','));
 
   // Render subsequent lines of children
-
-  let writeValues = (json) => {
+  let writeValues = (json, parent) => {
     var valArray = [];
 
     for (var key in json) {
@@ -37,16 +55,28 @@ module.exports.jsonToCsv = (json) => {
       }
     }
 
+    if (parent) {
+      valArray.push(parent);
+    }
+
+
+    valArray.unshift(uniqueInteger);
+    parentId = valArray[0];
+    uniqueInteger++;
     lines.push(valArray.join(','));
 
     if (json.children.length > 0) {
       _.each(json.children, (child) => {
-        writeValues(child);
+        writeValues(child, parentId);
       });
     }
   };
 
   writeValues(parsed);
+  idxReference.push('parent');
+  idxReference.unshift('0');
+  lines.unshift(idxReference.join(','));
+  lines = filter(lines, filterParam);
 
   return lines.join('\n');
 };
