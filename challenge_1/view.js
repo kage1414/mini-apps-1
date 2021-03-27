@@ -6,16 +6,15 @@ class View {
   }
 
   renderBoard() {
-    // Written while using DOM to track moves. Will refactor to render and reflect model.board.
-    this.removeBoard;
-    this.createNewTable();
-    controller.addClickHandlersToCells();
+    this.removeBoard();
+    this.createTable();
+    this.addClickHandlersToCells();
   }
 
   appendResetButton() {
     let resetButton = document.createElement('button');
     resetButton.innerHTML = 'Reset';
-    resetButton.setAttribute('onclick', 'view.resetDOM()');
+    resetButton.setAttribute('onclick', 'controller.resetGame()');
     document.body.appendChild(resetButton);
   }
 
@@ -27,9 +26,13 @@ class View {
     return cell;
   }
 
-  resetDOM() {
-    controller.removeDOMElements();
-    model = new Model();
+  addClickHandlersToCells() {
+    let cells = document.getElementsByClassName('cell');
+    for (let i = 0; i < cells.length; i++) {
+      cells[i].addEventListener('click', (e) => {
+        controller.clickHandler(e.target);
+      });
+    }
   }
 
   removeBoard() {
@@ -38,7 +41,7 @@ class View {
     }
   }
 
-  createNewTable() {
+  createTable() {
     let table = document.createElement('table');
     table.setAttribute('id', 'board');
     for (let i = 0; i < 3; i++) {
@@ -46,7 +49,7 @@ class View {
       for (let j = 0; j < 3; j++) {
         let cell = document.createElement('td');
         cell.innerHTML = model.board[i][j];
-        cell = view.setCellAttributes(cell, i, j);
+        cell = this.setCellAttributes(cell, i, j);
         row.appendChild(cell);
       }
 
@@ -56,4 +59,13 @@ class View {
     document.body.prepend(table);
   }
 
+  spaceOccupied() {
+    alert('Space taken. Please choose another space.');
+  }
+
+  alertWinner(winner) {
+    setTimeout(() => {
+      alert(`${winner} is the winner!`);
+    }, 0);
+  }
 }

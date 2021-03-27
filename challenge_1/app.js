@@ -1,2 +1,2 @@
-let view = new View();
 let model = new Model();
+let view = new View();
