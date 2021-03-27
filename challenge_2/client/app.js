@@ -1,31 +1,42 @@
 // Review
-let model = {
-  csvTableData: '',
-  initialHtml: `<h1>Submit JSON</h1>
-  <form id="submitJSON" enctype="multipart/form-data">
-    <textarea id="json" rows="50" cols="50"></textarea>
-    <br>
-    <input id="submitText" type="submit" value="Submit">
-  </form>
-  <form id="submitJSONFile" enctype="multipart/form-data">
-    <input type="file" id="jsonFile" rows="50" cols="50"></textarea>
-    <input id="submitJSON" type="submit" value="Submit">
-  </form>
-  <span>Filter Parameters</span><input id="filter" type="text">
-  <br>
-  <button id="latest">Get Latest File</button>
-  <div id="csvDiv"></div>`
-};
+class Model {
+  constructor() {
+    this.csvTableData = '';
+  }
+}
 
-let view = {
-  initialize: () => {
+let model = new Model();
+
+class View {
+  constructor() {
+    this.html = `<h1>Submit JSON</h1>
+    <form id="submitJSON" enctype="multipart/form-data">
+      <textarea id="json" rows="50" cols="50"></textarea>
+      <br>
+      <input id="submitText" type="submit" value="Submit">
+    </form>
+    <form id="submitJSONFile" enctype="multipart/form-data">
+      <input type="file" id="jsonFile" rows="50" cols="50"></textarea>
+      <input id="submitJSON" type="submit" value="Submit">
+    </form>
+    <span>Filter Parameters</span><input id="filter" type="text">
+    <br>
+    <button id="latest">Get Latest File</button>
+    <div id="csvDiv"></div>`;
     document.body.innerHTML = model.initialHtml;
-  },
-  appendCsvDiv: () => {
-    var $children = $('#csvDiv').children().detach();
+  }
+
+  appendCsvDiv () {
+    this.removePreviousTable();
     $(model.csvTableData).appendTo('#csvDiv');
   }
-};
+
+  removePreviousTable() {
+    $('#csvDiv').children().detach();
+  }
+}
+
+let view = new View();
 
 let controller = {
   initialize: () => {
