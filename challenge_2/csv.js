@@ -1,55 +1,91 @@
 const _ = require('lodash');
 
-let filter = (lines, filterParam) => {
-  let idxToDelete = [];
+module.exports = class CSV {
 
-  _.each(lines, (line) => {
-    if (line.includes(filterParam)) {
-      idxToDelete.push(lines.indexOf(line));
-    }
-  });
+  constructor(json, filterParam) {
+    this.idxReference = [];
+    this.uniqueInteger = 1;
+    this.lines = [];
+    this.object = {};
+    this.csv = this.jsonToCsv(json, filterParam);
+    this.html = this.csvToHtml(this.csv);
 
-  for (var i = lines.length; i >= 0; i--) {
-    if (idxToDelete.includes[i]) {
-      lines.splice(i, 1);
-    }
+    this.response = {
+      csv: this.csv,
+      html: this.html
+    };
+
+    return this.response;
   }
 
-  return lines;
-};
+  jsonToCsv(json, filterParam) {
+    this.object = JSON.parse(json);
+    this.filter();
+    let keys = Object.keys(this.object);
 
-module.exports.jsonToCsv = (json, filterParam) => {
-  let parsed = JSON.parse(json);
-  let idxReference = [];
-  let keys = Object.keys(parsed);
-  let uniqueInteger = 1;
+    _.each(keys, (key) => {
+      if (key !== 'children') {
+        this.idxReference.push(key);
+      }
+    });
 
-  _.each(keys, (key) => {
-    if (key !== 'children') {
-      idxReference.push(key);
+    this.writeValues(this.object);
+    this.idxReference.push('parent');
+    this.idxReference.unshift('0');
+    this.lines.unshift(this.idxReference.join(','));
+    if (filterParam) {
+      this.filter(filterParam);
     }
-  });
 
+    return this.lines.join('\n');
+  }
 
-  // Render first line of csv
-  let lines = [];
+  jsonFileToCsv(json) {
+    let string = json.data.toString();
+    return this.jsonToCsv(string);
+  }
 
-  // Render subsequent lines of children
-  let writeValues = (json, parent) => {
+  csvToHtml(csv) {
+    csv = csv.toString();
+    let rows = csv.split('\n');
+    var tableRows = _.map(rows, (row) => {
+      var cells = row.split(',');
+      var cells = _.map(cells, (cell) => {
+        return '<td>' + cell + '</td>';
+      });
+
+      return '<tr>' + cells.join('') + '</tr>';
+    });
+    tableRows.unshift('<table id="jsonTable">');
+    tableRows.push('</table>');
+    return tableRows.join('');
+  }
+
+  filter(filterParam) {
+    // Will implement in future
+  }
+
+  addUniqueInteger(valArray) {
+    valArray.unshift(this.uniqueInteger);
+    this.uniqueInteger++;
+    return valArray;
+  }
+
+  writeValues(json, parent) {
     var valArray = [];
 
     for (var key in json) {
       if (key !== 'children') {
-        var idx = idxReference.indexOf(key);
+        var idx = this.idxReference.indexOf(key);
         if (idx === -1) {
-          idxReference.push(key);
-          idx = idxReference.indexOf(key);
+          this.idxReference.push(key);
+          idx = this.idxReference.indexOf(key);
         }
         valArray[idx] = json[key];
       }
     }
 
-    for (let i = 0; i < idxReference.length; i++) {
+    for (let i = 0; i < this.idxReference.length; i++) {
       if (!valArray[i]) {
         valArray[i] = '';
       }
@@ -59,46 +95,19 @@ module.exports.jsonToCsv = (json, filterParam) => {
       valArray.push(parent);
     }
 
-
-    valArray.unshift(uniqueInteger);
-    parentId = valArray[0];
-    uniqueInteger++;
-    lines.push(valArray.join(','));
+    valArray = this.addUniqueInteger(valArray);
+    let line = valArray.join(',');
+    this.addLineToDocument(line);
 
     if (json.children.length > 0) {
       _.each(json.children, (child) => {
-        writeValues(child, parentId);
+        let parentId = valArray[0];
+        this.writeValues(child, parentId);
       });
     }
-  };
+  }
 
-  writeValues(parsed);
-  idxReference.push('parent');
-  idxReference.unshift('0');
-  lines.unshift(idxReference.join(','));
-  lines = filter(lines, filterParam);
-
-  return lines.join('\n');
-};
-
-module.exports.jsonFileToCsv = (json) => {
-  let string = json.data.toString();
-
-  return module.exports.jsonToCsv(string);
-};
-
-module.exports.csvToHtml = (csv) => {
-  csv = csv.toString();
-  let rows = csv.split('\n');
-  var tableRows = _.map(rows, (row) => {
-    var cells = row.split(',');
-    var cells = _.map(cells, (cell) => {
-      return '<td>' + cell + '</td>';
-    });
-
-    return '<tr>' + cells.join('') + '</tr>';
-  });
-  tableRows.unshift('<table id="jsonTable">');
-  tableRows.push('</table>');
-  return tableRows.join('');
+  addLineToDocument(line) {
+    this.lines.push(line);
+  }
 };

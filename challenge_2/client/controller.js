@@ -13,7 +13,8 @@ class Listeners {
         method: 'GET',
         url: '/latest',
         success: (data) => {
-          model.csvTableData = data;
+          model.csvTableData = data.csv;
+          model.csvTableHTML = data.html;
           view.appendCsvDiv();
         }
       });
@@ -35,7 +36,8 @@ class Listeners {
               filter: $filter
             },
             success: (data) => {
-              model.csvTableData = data;
+              model.csvTableData = data.csv;
+              model.csvTableHTML = data.html;
               view.appendCsvDiv();
             }
           });
@@ -56,8 +58,9 @@ class Listeners {
           filter: $filter
         },
         success: (data) => {
-          console.log(data);
-          model.csvTableHTML = data;
+          console.log(typeof data);
+          model.csvTableData = data.csv;
+          model.csvTableHTML = data.html;
           view.appendCsvDiv();
         }
       });

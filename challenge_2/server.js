@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const fileupload = require('express-fileupload');
 const controller = ('./controller.js');
-const csv = require('./csv.js');
+const CSV = require('./csv.js');
 const _ = require('lodash');
 const fs = require('fs');
 
@@ -22,26 +22,27 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/json', (req, res, next) => {
-  var csvData = csv.jsonToCsv(req.body.json, req.body.filter);
-  fs.writeFile('./latest.csv', csvData, (err) => {
+  let csv = new CSV(req.body.json, req.body.filter);
+  console.log(csv);
+  fs.writeFile('./latest.txt', JSON.stringify(csv), (err) => {
     if (err) {
       console.log(err);
     }
   });
-  let html = csv.csvToHtml(csvData);
-  res.send(html);
+  res.send(csv);
   next();
 });
 
 app.get('/latest', (req, res, next) => {
-  fs.readFile(path.join(__dirname, 'latest.csv'), (err, data) => {
+  fs.readFile(path.join(__dirname, 'latest.txt'), (err, data) => {
     if (err) {
       console.log(err);
     }
 
     if (data) {
-      let html = csv.csvToHtml(data);
-      res.send(html);
+      // let csv = new CSV();
+      // let html = csv.csvToHtml(data);
+      res.send(JSON.parse(data));
       next();
     } else {
       res.send('<div id="jsonTable">No previous data saved on server</div>');
