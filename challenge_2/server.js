@@ -22,15 +22,19 @@ app.get('/', (req, res, next) => {
 });
 
 app.post('/json', (req, res, next) => {
-  let csv = new CSV(req.body.json, req.body.filter);
-  console.log(csv);
-  fs.writeFile('./latest.txt', JSON.stringify(csv), (err) => {
-    if (err) {
-      console.log(err);
-    }
-  });
-  res.send(csv);
-  next();
+  if (req.body.json) {
+    let csv = new CSV(req.body.json, req.body.filter);
+    fs.writeFile('./latest.txt', JSON.stringify(csv), (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+    res.send(csv);
+    next();
+  } else {
+    res.status(404);
+    next();
+  }
 });
 
 app.get('/latest', (req, res, next) => {
