@@ -2,9 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const fileupload = require('express-fileupload');
-const controller = ('./controller.js');
 const CSV = require('./csv.js');
-const _ = require('lodash');
 const fs = require('fs');
 
 const app = express();
@@ -44,12 +42,13 @@ app.get('/latest', (req, res, next) => {
     }
 
     if (data) {
-      // let csv = new CSV();
-      // let html = csv.csvToHtml(data);
       res.send(JSON.parse(data));
       next();
     } else {
-      res.send('<div id="jsonTable">No previous data saved on server</div>');
+      res.send({
+        csv: '',
+        html: '<div id="jsonTable">No previous data saved on server</div>'
+      });
       next();
     }
   });
