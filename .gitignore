@@ -1,4 +1,5 @@
 node_modules
 latest.csv
 latest.txt
+files
 *.DS_Store
