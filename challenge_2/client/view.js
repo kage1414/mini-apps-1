@@ -1,4 +1,5 @@
 class View {
+
   constructor() {
     this.html = `<h1>Submit JSON</h1>
     <form id="submitJSON" enctype="multipart/form-data">
@@ -19,10 +20,11 @@ class View {
 
   appendCsvDiv() {
     this.removePreviousTable();
-    $(model.csvTableData).appendTo('#csvDiv');
+    $(model.csvTableHTML).appendTo('#csvDiv');
   }
 
   removePreviousTable() {
     $('#csvDiv').children().detach();
   }
+
 }

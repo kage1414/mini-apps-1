@@ -1,5 +1,9 @@
+let model;
+let view;
+let controller;
+
 $(document).ready(() => {
-  let model = new Model();
-  let view = new View();
-  const controller = new Controller();
+  model = new Model();
+  view = new View();
+  controller = new Controller();
 });

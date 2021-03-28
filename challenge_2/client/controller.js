@@ -56,7 +56,8 @@ class Listeners {
           filter: $filter
         },
         success: (data) => {
-          model.csvTableData = data;
+          console.log(data);
+          model.csvTableHTML = data;
           view.appendCsvDiv();
         }
       });
