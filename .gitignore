@@ -1,6 +1,3 @@
 node_modules
-latest.csv
-latest.txt
-files
-files/*
+challenge_2/latest.txt
 *.DS_Store
