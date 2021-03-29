@@ -9,9 +9,9 @@ class View {
     this.removeBoard();
     this.createTable();
     this.addClickHandlersToCells();
-    if (callback) {
-      callback();
-    }
+    // if (callback) {
+    //   callback();
+    // }
   }
 
   appendResetButton() {
@@ -72,9 +72,9 @@ class View {
     }, 0);
   }
 
-  alertTie() {
+  alertTie(callback) {
     setTimeout(() => {
-      alert('Tie!');
+      alert(`Tie!`);
     }, 0);
   }
 }
