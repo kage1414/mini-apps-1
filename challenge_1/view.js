@@ -74,7 +74,7 @@ class View {
 
   alertTie(callback) {
     setTimeout(() => {
-      alert(`Tie!`);
+      alert('Tie!');
     }, 0);
   }
 }
