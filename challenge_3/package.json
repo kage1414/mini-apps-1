@@ -20,8 +20,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
-    "compile": "npx babel client/. --out-file client/script.js --presets=@babel/preset-react --ignore=client/script.js"
+    "start": "nodemon --delay 2000ms server.js",
+    "compile": "npx babel client/. --out-file client/script.js --presets=@babel/preset-react --watch --ignore=client/script.js"
   },
   "author": "",
   "license": "ISC"
