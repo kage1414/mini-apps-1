@@ -42,14 +42,14 @@ app.post('/page2', (req, res) => {
       page: 2
     });
   } else {
-    res.send(false);
+    res.sendStatus(400);
   }
 });
 
 app.post('/page3', (req, res) => {
 
   let entries = Object.entries(req.body);
-  if (entries.length === 14) {
+  if (entries.length === 15) {
     res.clearCookie('page');
     res.cookie('page', 3);
     res.send({

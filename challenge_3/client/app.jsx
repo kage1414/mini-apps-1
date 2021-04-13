@@ -47,15 +47,14 @@ class App extends React.Component {
 
     axios.post(`/${id}`, data)
       .then((response) => {
-        console.log(response);
-        if (response.data) {
-          this.setState({
-            page: response.data.page
-          });
-        } else {
-          this.setState({
-            error: true
-          });
+        this.setState({
+          page: response.data.page,
+          formData: {}
+        });
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err);
         }
       });
   }
@@ -154,7 +153,8 @@ const F3 = (props) => {
         <input type="text" id="cardNumber" onChange={props.handleInputChange} />
         <br />
         <label for="expiry">Expiration</label>
-        <input type="text" id="expiry" onChange={props.handleInputChange} />
+        <input type="text" id="expiryMonth" onChange={props.handleInputChange} placeholder="month"/>
+        <input type="text" id="expiryYear" onChange={props.handleInputChange} placeholder="year"/>
         <br />
         <label for="cvv">CVV</label>
         <input type="text" id="cvv" onChange={props.handleInputChange} />
