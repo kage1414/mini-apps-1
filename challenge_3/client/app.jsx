@@ -92,9 +92,12 @@ const F1 = (props) => {
   return (
     <div>
       <form onSubmit={props.handleSubmit} id="page1">
-        <label for="name">Name</label>
-        <input type="text" id="name" onChange={props.handleInputChange}/>
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" onChange={props.handleInputChange}/>
         <br/>
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" onChange={props.handleInputChange} />
+        <br />
         <label for="email">Email</label>
         <input type="text" id="email" onChange={props.handleInputChange}/>
         <br />
