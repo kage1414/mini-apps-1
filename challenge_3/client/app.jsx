@@ -186,6 +186,7 @@ const Page = (props) => {
   return (
     <div>
       <span>{props.entry[0]}</span>
+      <span>: </span>
       <span>{props.entry[1]}</span>
     </div>
   );

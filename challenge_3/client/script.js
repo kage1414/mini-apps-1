@@ -212,7 +212,7 @@ const Confirmation = props => {
 };
 
 const Page = props => {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, props.entry[0]), /*#__PURE__*/React.createElement("span", null, props.entry[1]));
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, props.entry[0]), /*#__PURE__*/React.createElement("span", null, ": "), /*#__PURE__*/React.createElement("span", null, props.entry[1]));
 };
 
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.getElementById('app'));
