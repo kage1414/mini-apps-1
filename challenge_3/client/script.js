@@ -6,12 +6,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       submitted: false,
-      page: 0
-    };
-    this.pages = {
-      page1: ['name', 'email', 'password'],
-      page2: ['line1', 'line2', 'city', 'state', 'shippingZip', 'phone'],
-      page3: ['cardNumber', 'expiry', 'cvv', 'billingZip']
+      page: 0,
+      formData: {}
     };
   }
 
@@ -21,48 +17,42 @@ class App extends React.Component {
     });
   }
 
+  findParent(value) {
+    for (let page in this.state.pages) {
+      for (let ele in this.state.pages[page]) {
+        if (ele === value) {
+          return page;
+        }
+      }
+    }
+  }
+
   handleInputChange(event) {
     event.preventDefault();
-    let obj = {};
-    let key = event.target.id;
-    let value = event.target.value;
-    obj[key] = value;
-    this.setState(obj);
+    const id = event.target.id;
+    let formData = this.state.formData;
+    formData[id] = event.target.value;
+    this.setState({
+      formData
+    });
   }
 
   handleSubmit(event) {
-    this.setState({
-      error: false
-    });
     event.preventDefault();
-    let goOn = true;
-    let pageNumber = event.target.id;
-    let inputs = this.pages[pageNumber];
-
-    for (let i = 0; i < inputs.length; i++) {
-      let input = inputs[i];
-
-      if (!this.state[input]) {
-        console.log(input);
-        this.setState({
-          error: true
-        });
-        console.log(inputs[i]);
-        goOn = false;
-        return;
-      }
-    }
-
-    if (goOn) {
-      this.nextPage();
-    }
+    const data = this.state.formData;
+    console.log(data);
+    axios.post('/form', data);
+    this.setState({
+      formData: {}
+    });
   }
 
   render() {
     return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Checkout, {
       handleSubmit: this.handleSubmit.bind(this),
       page: this.state.page,
-      handleInputChange: this.handleInputChange.bind(this)
+      handleInputChange: this.handleInputChange.bind(this),
+      pages: this.state.pages
     }));
   }
 
@@ -83,6 +73,8 @@ class Checkout extends React.Component {
     }), /*#__PURE__*/React.createElement(F3, {
       handleSubmit: this.props.handleSubmit,
       handleInputChange: this.props.handleInputChange
+    }), /*#__PURE__*/React.createElement(Confirmation, {
+      pages: this.props.pages
     })];
     return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, "Checkout"), steps[this.props.page]);
   }
@@ -194,8 +186,17 @@ const F3 = props => {
   })));
 };
 
-const Summary = props => {};
+const Confirmation = props => {
+  let objects = Object.values(props.pages);
+  return /*#__PURE__*/React.createElement("div", null, objects.map(obj => /*#__PURE__*/React.createElement(Page, {
+    page: obj,
+    key: JSON.stringify(obj)
+  })));
+};
 
-const Next = props => {};
+const Page = props => {
+  let entries = Object.entries(props.page);
+  return /*#__PURE__*/React.createElement("div", null, entries.map(entry => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, entry[0]), /*#__PURE__*/React.createElement("span", null, ": "), /*#__PURE__*/React.createElement("span", null, entry[1]))));
+};
 
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.getElementById('app'));

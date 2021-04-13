@@ -9,11 +9,7 @@ class App extends React.Component {
     this.state = {
       submitted: false,
       page: 0,
-    };
-    this.pages = {
-      page1: ['name', 'email', 'password'],
-      page2: ['line1', 'line2', 'city', 'state', 'shippingZip', 'phone'],
-      page3: ['cardNumber', 'expiry', 'cvv', 'billingZip']
+      formData: {}
     };
   }
 
@@ -23,48 +19,45 @@ class App extends React.Component {
     });
   }
 
+  findParent(value) {
+    for (let page in this.state.pages) {
+      for (let ele in this.state.pages[page]) {
+        if (ele === value) {
+          return page;
+        }
+      }
+    }
+  }
+
   handleInputChange(event) {
+
     event.preventDefault();
-    let obj = {};
-    let key = event.target.id;
-    let value = event.target.value;
-    obj[key] = value;
-    this.setState(obj);
+    const id = event.target.id;
+    let formData = this.state.formData;
+    formData[id] = event.target.value;
+    this.setState({formData});
   }
 
   handleSubmit(event) {
-    this.setState({
-      error: false
-    });
     event.preventDefault();
 
-    let goOn = true;
+    const id = event.target.id;
+    const data = this.state.formData;
 
-    let pageNumber = event.target.id;
-    let inputs = this.pages[pageNumber];
+    axios.post(`/${id}`, data)
+      .then((data) => {
 
-    for (let i = 0; i < inputs.length; i++) {
-      let input = inputs[i];
-      if (!this.state[input]) {
-        console.log(input);
-        this.setState({
-          error: true
-        });
-        console.log(inputs[i]);
-        goOn = false;
-        return;
-      }
-    }
+      });
 
-    if (goOn) {
-      this.nextPage();
-    }
+    this.setState({
+      formData: {}
+    });
   }
 
   render() {
     return (
       <div>
-        <Checkout handleSubmit={this.handleSubmit.bind(this)} page={this.state.page} handleInputChange={this.handleInputChange.bind(this)} />
+        <Checkout handleSubmit={this.handleSubmit.bind(this)} page={this.state.page} handleInputChange={this.handleInputChange.bind(this)} pages={this.state.pages} />
       </div>
     );
   }
@@ -81,7 +74,8 @@ class Checkout extends React.Component {
     const steps = [
       <F1 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />,
       <F2 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />,
-      <F3 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />
+      <F3 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />,
+      <Confirmation pages={this.props.pages} />
     ];
 
     return (
@@ -99,13 +93,13 @@ const F1 = (props) => {
     <div>
       <form onSubmit={props.handleSubmit} id="page1">
         <label for="name">Name</label>
-        <input type="text" id="name" onChange={props.handleInputChange} />
+        <input type="text" id="name" onChange={props.handleInputChange}/>
         <br/>
         <label for="email">Email</label>
-        <input type="text" id="email" onChange={props.handleInputChange} />
+        <input type="text" id="email" onChange={props.handleInputChange}/>
         <br />
         <label for="password">Password</label>
-        <input type="password" id="password" onChange={props.handleInputChange} />
+        <input type="password" id="password" onChange={props.handleInputChange}/>
         <br />
         <input type="submit" ></input>
       </form >
@@ -165,12 +159,33 @@ const F3 = (props) => {
   );
 };
 
-const Summary = (props) => {
+const Confirmation = (props) => {
+
+  let objects = Object.values(props.pages);
+
+  return (
+    <div>
+      {objects.map(obj => (<Page page={obj} key={JSON.stringify(obj)} />))}
+    </div>
+  );
 
 };
 
-const Next = (props) => {
+const Page = (props) => {
 
+  let entries = Object.entries(props.page);
+
+  return (
+    <div>
+      {entries.map(entry => (
+        <div>
+          <span>{entry[0]}</span>
+          <span>: </span>
+          <span>{entry[1]}</span>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 ReactDOM.render(<App />, document.getElementById('app'));
