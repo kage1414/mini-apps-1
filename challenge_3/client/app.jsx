@@ -45,8 +45,8 @@ class App extends React.Component {
     const data = this.state.formData;
 
     axios.post(`/${id}`, data)
-      .then((data) => {
-
+      .then((response) => {
+        console.log(typeof response.data);
       });
 
     this.setState({

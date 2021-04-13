@@ -39,9 +39,11 @@ class App extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    const id = event.target.id;
     const data = this.state.formData;
-    console.log(data);
-    axios.post('/form', data);
+    axios.post(`/${id}`, data).then(response => {
+      console.log(typeof response.data);
+    });
     this.setState({
       formData: {}
     });
