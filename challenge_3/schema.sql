@@ -10,9 +10,9 @@ CREATE TABLE users (
   first_name MEDIUMTEXT,
   last_name MEDIUMTEXT,
   email MEDIUMTEXT,
-  password MEDIUMTEXT,
+  password MEDIUMTEXT
 
-)
+);
 
 DROP TABLE IF EXISTS cards;
 
@@ -22,9 +22,9 @@ CREATE TABLE cards (
   number INT,
   expiry_month INT,
   expiry_year INT,
-  cvv INT,
+  cvv INT
 
-)
+);
 
 DROP TABLE IF EXISTS orders;
 
@@ -38,4 +38,14 @@ CREATE TABLE orders (
   zipcode INT,
   phone INT
 
-)
+);
+
+DROP TABLE IF EXISTS sessions;
+
+CREATE TABLE sessions (
+
+  id INT NOT NULL PRIMARY KEY,
+  cookie INT,
+  user INT
+
+);

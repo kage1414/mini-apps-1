@@ -88,10 +88,16 @@ const F1 = props => {
     onSubmit: props.handleSubmit,
     id: "page1"
   }, /*#__PURE__*/React.createElement("label", {
-    for: "name"
-  }, "Name"), /*#__PURE__*/React.createElement("input", {
+    for: "firstName"
+  }, "First Name"), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    id: "name",
+    id: "firstName",
+    onChange: props.handleInputChange
+  }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    for: "lastName"
+  }, "Last Name"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    id: "lastName",
     onChange: props.handleInputChange
   }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
     for: "email"
