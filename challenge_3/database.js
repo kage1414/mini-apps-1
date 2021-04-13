@@ -135,3 +135,9 @@ module.exports.addCard = (formData) => {
   return Card.create(data);
 
 };
+
+module.exports.findAllOrderData = (orderId) => {
+
+
+
+};

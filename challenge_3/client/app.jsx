@@ -47,10 +47,7 @@ class App extends React.Component {
 
     axios.post(`/${id}`, formData)
       .then((response) => {
-        this.setState({
-          page: response.data.page,
-          formData: {}
-        });
+        this.setState(response.data.state);
       })
       .catch((err) => {
         if (err) {

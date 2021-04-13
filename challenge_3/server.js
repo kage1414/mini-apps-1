@@ -27,7 +27,12 @@ app.post('/page1', (req, res) => {
     db.addUser(userData)
       .then((response) => {
         res.cookie('orderId', response.orderId);
-        res.send({page: 1});
+        res.send({
+          state: {
+            page: 1,
+            formData: {}
+          },
+        });
       })
       .catch((err) => {
         if (err) {
@@ -53,7 +58,18 @@ app.post('/page2', (req, res) => {
         return db.addOrder(orderData);
       })
       .then((response) => {
-        res.send({page: 2});
+
+      })
+      .then((response) => {
+        res.send({
+          state: {
+            page: 2,
+            formData: {},
+            allData: {
+
+            }
+          },
+        });
       })
       .catch((err) => {
         if (err) {
@@ -81,7 +97,12 @@ app.post('/page3', (req, res) => {
         return db.addCard(orderData);
       })
       .then((response) => {
-        res.send({ page: 3 });
+        res.send({
+          state: {
+            page: 3,
+            formData: {}
+          },
+        });
       })
       .catch((err) => {
         if (err) {
@@ -96,6 +117,8 @@ app.post('/page3', (req, res) => {
 });
 
 app.get('/confirmation', (req, res) => {
+
+
 
 });
 
