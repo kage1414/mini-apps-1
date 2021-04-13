@@ -41,18 +41,15 @@ class App extends React.Component {
     event.preventDefault();
     console.log('submit');
     const id = event.target.id;
-    const data = this.state.formData;
-    axios.post(`/${id}`, data).then(response => {
-      console.log(response);
-
-      if (response.data) {
-        this.setState({
-          page: response.data.page
-        });
-      } else {
-        this.setState({
-          error: true
-        });
+    const formData = this.state.formData;
+    axios.post(`/${id}`, formData).then(response => {
+      this.setState({
+        page: response.data.page,
+        formData: {}
+      });
+    }).catch(err => {
+      if (err) {
+        console.log(err);
       }
     });
   }
@@ -183,8 +180,14 @@ const F3 = props => {
     for: "expiry"
   }, "Expiration"), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    id: "expiry",
-    onChange: props.handleInputChange
+    id: "expiryMonth",
+    onChange: props.handleInputChange,
+    placeholder: "month"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    id: "expiryYear",
+    onChange: props.handleInputChange,
+    placeholder: "year"
   }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
     for: "cvv"
   }, "CVV"), /*#__PURE__*/React.createElement("input", {

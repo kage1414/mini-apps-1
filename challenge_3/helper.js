@@ -1,5 +1,5 @@
 module.exports.generateRandomString = (length) => {
-  let chars = 'abcdefghijklmnopqrstuvwxyz';
+  let chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
   let string = '';
 
   for (let i = 0; i < length; i++) {

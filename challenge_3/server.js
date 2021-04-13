@@ -3,10 +3,9 @@ const app = express();
 const path = require('path');
 const PORT = 3000;
 const bodyParser = require('body-parser');
-const sequelize = require('sequelize');
 const cookieParser = require('cookie-parser');
-const helper = require('./helper.js');
 const db = require('./database.js');
+const helper = require('./helper.js');
 
 const clientPath = path.join(__dirname, 'client');
 
@@ -17,30 +16,53 @@ app.use(express.static(clientPath));
 
 
 app.post('/page1', (req, res) => {
-  console.log(req.cookies);
 
   let entries = Object.entries(req.body);
   if (entries.length === 4) {
-    res.cookie('page', 1);
-    res.send({
-      request: true,
-      page: 1
-    });
+
+    const orderId = helper.generateRandomString(24);
+    const userData = req.body;
+    userData['orderId'] = orderId;
+
+    db.addUser(userData)
+      .then((response) => {
+        res.cookie('orderId', response.orderId);
+        res.send({page: 1});
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err);
+        }
+        res.sendStatus(400);
+      });
   } else {
-    res.send(false);
+    res.sendStatus(400);
   }
 });
 
 app.post('/page2', (req, res) => {
 
   let entries = Object.entries(req.body);
-  if (entries.length === 10) {
-    res.clearCookie('page');
-    res.cookie('page', 2);
-    res.send({
-      request: true,
-      page: 2
-    });
+  if (entries.length === 6) {
+
+    db.getUserId(req.cookies.orderId)
+      .then((userId) => {
+        const orderData = req.body;
+        orderData['orderId'] = req.cookies.orderId;
+        orderData['userId'] = userId;
+        return db.addOrder(orderData);
+      })
+      .then((response) => {
+        res.send({page: 2});
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err);
+        }
+        res.sendStatus(400);
+      });
+
+
   } else {
     res.sendStatus(400);
   }
@@ -49,16 +71,32 @@ app.post('/page2', (req, res) => {
 app.post('/page3', (req, res) => {
 
   let entries = Object.entries(req.body);
-  if (entries.length === 15) {
-    res.clearCookie('page');
-    res.cookie('page', 3);
-    res.send({
-      request: true,
-      page: 3
-    });
+  if (entries.length === 5) {
+
+    db.getUserId(req.cookies.orderId)
+      .then((userId) => {
+        const orderData = req.body;
+        orderData['orderId'] = req.cookies.orderId;
+        orderData['userId'] = userId;
+        return db.addCard(orderData);
+      })
+      .then((response) => {
+        res.send({ page: 3 });
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err);
+        }
+        res.sendStatus(400);
+      });
+
   } else {
-    res.send(false);
+    res.sendStatus(400);
   }
+});
+
+app.get('/confirmation', (req, res) => {
+
 });
 
 app.listen(PORT, () => {

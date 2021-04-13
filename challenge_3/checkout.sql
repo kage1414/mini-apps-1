@@ -8,11 +8,13 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
 
-  id INT NOT NULL PRIMARY KEY,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   first_name MEDIUMTEXT,
   last_name MEDIUMTEXT,
   email MEDIUMTEXT,
-  password MEDIUMTEXT
+  password MEDIUMTEXT,
+  orderId MEDIUMTEXT,
+  PRIMARY KEY (id)
 
 );
 
@@ -20,11 +22,14 @@ DROP TABLE IF EXISTS cards;
 
 CREATE TABLE cards (
 
-  id INT NOT NULL PRIMARY KEY,
-  number INT,
-  expiry_month INT,
-  expiry_year INT,
-  cvv INT
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  number INTEGER,
+  expiry_month INTEGER,
+  expiry_year INTEGER,
+  cvv INTEGER,
+  user INTEGER,
+  orderId MEDIUMTEXT,
+  PRIMARY KEY (id)
 
 );
 
@@ -32,22 +37,15 @@ DROP TABLE IF EXISTS orders;
 
 CREATE TABLE orders (
 
-  id INT NOT NULL PRIMARY KEY,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   line_1 MEDIUMTEXT,
   line_2 MEDIUMTEXT,
   city MEDIUMTEXT,
   state MEDIUMTEXT,
-  zipcode INT,
-  phone INT
-
-);
-
-DROP TABLE IF EXISTS sessions;
-
-CREATE TABLE sessions (
-
-  id INT NOT NULL PRIMARY KEY,
-  cookie INT,
-  user INT
+  zipcode INTEGER,
+  phone INTEGER,
+  user INTEGER,
+  orderId MEDIUMTEXT,
+  PRIMARY KEY (id)
 
 );
