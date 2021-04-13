@@ -39,13 +39,21 @@ class App extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    console.log('submit');
     const id = event.target.id;
     const data = this.state.formData;
     axios.post(`/${id}`, data).then(response => {
-      console.log(typeof response.data);
-    });
-    this.setState({
-      formData: {}
+      console.log(response);
+
+      if (response.data) {
+        this.setState({
+          page: response.data.page
+        });
+      } else {
+        this.setState({
+          error: true
+        });
+      }
     });
   }
 
@@ -54,7 +62,7 @@ class App extends React.Component {
       handleSubmit: this.handleSubmit.bind(this),
       page: this.state.page,
       handleInputChange: this.handleInputChange.bind(this),
-      pages: this.state.pages
+      formData: this.state.formData
     }));
   }
 
@@ -76,7 +84,7 @@ class Checkout extends React.Component {
       handleSubmit: this.props.handleSubmit,
       handleInputChange: this.props.handleInputChange
     }), /*#__PURE__*/React.createElement(Confirmation, {
-      pages: this.props.pages
+      formData: this.props.formData
     })];
     return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, "Checkout"), steps[this.props.page]);
   }
@@ -195,16 +203,16 @@ const F3 = props => {
 };
 
 const Confirmation = props => {
-  let objects = Object.values(props.pages);
-  return /*#__PURE__*/React.createElement("div", null, objects.map(obj => /*#__PURE__*/React.createElement(Page, {
-    page: obj,
-    key: JSON.stringify(obj)
+  console.log(props);
+  let entries = Object.entries(props.formData);
+  return /*#__PURE__*/React.createElement("div", null, entries.map(entry => /*#__PURE__*/React.createElement(Page, {
+    entry: entry,
+    key: JSON.stringify(entry)
   })));
 };
 
 const Page = props => {
-  let entries = Object.entries(props.page);
-  return /*#__PURE__*/React.createElement("div", null, entries.map(entry => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, entry[0]), /*#__PURE__*/React.createElement("span", null, ": "), /*#__PURE__*/React.createElement("span", null, entry[1]))));
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, props.entry[0]), /*#__PURE__*/React.createElement("span", null, props.entry[1]));
 };
 
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.getElementById('app'));

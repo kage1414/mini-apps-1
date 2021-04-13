@@ -5,36 +5,60 @@ const PORT = 3000;
 const bodyParser = require('body-parser');
 const sequelize = require('sequelize');
 const cookieParser = require('cookie-parser');
-const helpers = require('./helpers.js');
+const helper = require('./helper.js');
+const db = require('./database.js');
 
 const clientPath = path.join(__dirname, 'client');
 
-app.use(express.static(clientPath));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+app.use(cookieParser());
+app.use(express.static(clientPath));
+
 
 app.post('/page1', (req, res) => {
-  console.log('page1');
-  console.log(req.body);
+  console.log(req.cookies);
+
   let entries = Object.entries(req.body);
-  console.log(entries);
-  if (entries.length === 3) {
-    let cookie = helpers.generateRandomString(24);
-    res.send(true);
+  if (entries.length === 4) {
+    res.cookie('page', 1);
+    res.send({
+      request: true,
+      page: 1
+    });
   } else {
-    res.cookie('page1', 'page1');
     res.send(false);
   }
 });
 
 app.post('/page2', (req, res) => {
-  console.log('page2');
-  console.log(req.body);
+
+  let entries = Object.entries(req.body);
+  if (entries.length === 10) {
+    res.clearCookie('page');
+    res.cookie('page', 2);
+    res.send({
+      request: true,
+      page: 2
+    });
+  } else {
+    res.send(false);
+  }
 });
 
 app.post('/page3', (req, res) => {
-  console.log('page3');
-  console.log(req.body);
+
+  let entries = Object.entries(req.body);
+  if (entries.length === 14) {
+    res.clearCookie('page');
+    res.cookie('page', 3);
+    res.send({
+      request: true,
+      page: 3
+    });
+  } else {
+    res.send(false);
+  }
 });
 
 app.listen(PORT, () => {

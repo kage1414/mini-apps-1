@@ -40,14 +40,18 @@ class App extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    console.log('submit');
 
     const id = event.target.id;
     const data = this.state.formData;
 
     axios.post(`/${id}`, data)
       .then((response) => {
+        console.log(response);
         if (response.data) {
-          this.nextPage();
+          this.setState({
+            page: response.data.page
+          });
         } else {
           this.setState({
             error: true
@@ -59,7 +63,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Checkout handleSubmit={this.handleSubmit.bind(this)} page={this.state.page} handleInputChange={this.handleInputChange.bind(this)} pages={this.state.pages} />
+        <Checkout handleSubmit={this.handleSubmit.bind(this)} page={this.state.page} handleInputChange={this.handleInputChange.bind(this)} formData={this.state.formData} />
       </div>
     );
   }
@@ -77,7 +81,7 @@ class Checkout extends React.Component {
       <F1 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />,
       <F2 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />,
       <F3 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />,
-      <Confirmation pages={this.props.pages} />
+      <Confirmation formData={this.props.formData} />
     ];
 
     return (
@@ -165,12 +169,13 @@ const F3 = (props) => {
 };
 
 const Confirmation = (props) => {
+  console.log(props);
 
-  let objects = Object.values(props.pages);
+  let entries = Object.entries(props.formData);
 
   return (
     <div>
-      {objects.map(obj => (<Page page={obj} key={JSON.stringify(obj)} />))}
+      {entries.map(entry => (<Page entry={entry} key={JSON.stringify(entry)} />))}
     </div>
   );
 
@@ -178,17 +183,10 @@ const Confirmation = (props) => {
 
 const Page = (props) => {
 
-  let entries = Object.entries(props.page);
-
   return (
     <div>
-      {entries.map(entry => (
-        <div>
-          <span>{entry[0]}</span>
-          <span>: </span>
-          <span>{entry[1]}</span>
-        </div>
-      ))}
+      <span>{props.entry[0]}</span>
+      <span>{props.entry[1]}</span>
     </div>
   );
 };
