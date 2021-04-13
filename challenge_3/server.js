@@ -5,6 +5,7 @@ const PORT = 3000;
 const bodyParser = require('body-parser');
 const sequelize = require('sequelize');
 const cookieParser = require('cookie-parser');
+const helpers = require('./helpers.js');
 
 const clientPath = path.join(__dirname, 'client');
 
@@ -18,6 +19,7 @@ app.post('/page1', (req, res) => {
   let entries = Object.entries(req.body);
   console.log(entries);
   if (entries.length === 3) {
+    let cookie = helpers.generateRandomString(24);
     res.send(true);
   } else {
     res.cookie('page1', 'page1');

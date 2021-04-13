@@ -46,12 +46,14 @@ class App extends React.Component {
 
     axios.post(`/${id}`, data)
       .then((response) => {
-        console.log(typeof response.data);
+        if (response.data) {
+          this.nextPage();
+        } else {
+          this.setState({
+            error: true
+          });
+        }
       });
-
-    this.setState({
-      formData: {}
-    });
   }
 
   render() {
