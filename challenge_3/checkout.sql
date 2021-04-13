@@ -2,6 +2,8 @@ DROP DATABASE IF EXISTS checkout;
 
 CREATE DATABASE checkout;
 
+USE checkout;
+
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
