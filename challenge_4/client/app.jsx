@@ -47,7 +47,7 @@ class App extends React.Component {
           alert(error.response.data);
         });
     } else {
-      alert(`Game Over! ${this.state.winner} is the Winner!\nRefresh Page To Begin New Game`);
+      alert(`Game Over! ${this.state.winner ? this.state.winner + ' is the Winner!': 'Tie!'}\nRefresh Page To Begin New Game`);
     }
   }
 
