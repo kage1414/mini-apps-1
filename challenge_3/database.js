@@ -11,10 +11,22 @@ const User = db.define('users', {
     primaryKey: true,
     autoIncrement: true
   },
-  'first_name': Sequelize.STRING,
-  'last_name': Sequelize.STRING,
-  email: Sequelize.STRING,
-  password: Sequelize.STRING,
+  'first_name': {
+    type: Sequelize.STRING,
+    unique: true
+  },
+  'last_name': {
+    type: Sequelize.STRING,
+    unique: true
+  },
+  email: {
+    type: Sequelize.STRING,
+    unique: true
+  },
+  password: {
+    type: Sequelize.STRING,
+    unique: true
+  },
   orderId: Sequelize.STRING
 }, {
   timestamps: false
