@@ -48,7 +48,7 @@ app.post('/page1', (req, res) => {
 app.post('/page2', (req, res) => {
 
   let entries = Object.entries(req.body);
-  if (entries.length === 6) {
+  if (entries.length === 6 || entries.length === 5 && req.body.line2 === undefined) {
 
     db.getUserId(req.cookies.orderId)
       .then((userId) => {
@@ -97,10 +97,17 @@ app.post('/page3', (req, res) => {
         return db.addCard(orderData);
       })
       .then((response) => {
+        return db.findAllOrderData(req.cookies.orderId);
+      })
+      .then((orderData) => {
+        orderData.user.password = '********';
+        orderData.card.number = helper.hideAllButLastFour(orderData.card.number);
+        orderData.card.cvv = '***';
         res.send({
           state: {
             page: 3,
-            formData: {}
+            formData: {},
+            orderData
           },
         });
       })

@@ -23,10 +23,10 @@ DROP TABLE IF EXISTS cards;
 CREATE TABLE cards (
 
   id INTEGER NOT NULL AUTO_INCREMENT,
-  number INTEGER,
-  expiry_month INTEGER,
-  expiry_year INTEGER,
-  cvv INTEGER,
+  number MEDIUMTEXT,
+  expiry_month MEDIUMTEXT,
+  expiry_year MEDIUMTEXT,
+  cvv MEDIUMTEXT,
   user INTEGER,
   orderId MEDIUMTEXT,
   PRIMARY KEY (id)
@@ -42,8 +42,8 @@ CREATE TABLE orders (
   line_2 MEDIUMTEXT,
   city MEDIUMTEXT,
   state MEDIUMTEXT,
-  zipcode INTEGER,
-  phone INTEGER,
+  zipcode MEDIUMTEXT,
+  phone MEDIUMTEXT,
   user INTEGER,
   orderId MEDIUMTEXT,
   PRIMARY KEY (id)

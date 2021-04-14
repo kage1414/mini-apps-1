@@ -48,6 +48,7 @@ class App extends React.Component {
     axios.post(`/${id}`, formData)
       .then((response) => {
         this.setState(response.data.state);
+        console.log(response.data);
       })
       .catch((err) => {
         if (err) {
@@ -166,7 +167,6 @@ const F3 = (props) => {
 };
 
 const Confirmation = (props) => {
-  console.log(props);
 
   let entries = Object.entries(props.formData);
 

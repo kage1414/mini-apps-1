@@ -26,10 +26,10 @@ const Card = db.define('cards', {
     primaryKey: true,
     autoIncrement: true
   },
-  number: Sequelize.INTEGER,
-  expiry_month: Sequelize.INTEGER,
-  expiry_year: Sequelize.INTEGER,
-  cvv: Sequelize.INTEGER,
+  number: Sequelize.STRING,
+  expiry_month: Sequelize.STRING,
+  expiry_year: Sequelize.STRING,
+  cvv: Sequelize.STRING,
   user: Sequelize.INTEGER,
   orderId: Sequelize.STRING
 }, {
@@ -46,8 +46,8 @@ const Order = db.define('orders', {
   line_2: Sequelize.STRING,
   city: Sequelize.STRING,
   state: Sequelize.STRING,
-  zipcode: Sequelize.INTEGER,
-  phone: Sequelize.INTEGER,
+  zipcode: Sequelize.STRING,
+  phone: Sequelize.STRING,
   user: Sequelize.INTEGER,
   orderId: Sequelize.STRING
 }, {
@@ -138,6 +138,29 @@ module.exports.addCard = (formData) => {
 
 module.exports.findAllOrderData = (orderId) => {
 
+  let user;
+  let card;
+  let order;
 
+  return User.findAll({
+    where: {orderId}
+  })
+    .then((response) => {
+      user = response[0].dataValues;
+      return Card.findAll({
+        where: {orderId}
+      });
+    })
+    .then((response) => {
+      card = response[0].dataValues;
+      return Order.findAll({
+        where: {orderId}
+      });
+    })
+    .then((response) => {
+      order = response[0].dataValues;
+      const orderData = {user, card, order};
+      return orderData;
+    });
 
 };

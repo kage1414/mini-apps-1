@@ -43,10 +43,8 @@ class App extends React.Component {
     const id = event.target.id;
     const formData = this.state.formData;
     axios.post(`/${id}`, formData).then(response => {
-      this.setState({
-        page: response.data.page,
-        formData: {}
-      });
+      this.setState(response.data.state);
+      console.log(response.data);
     }).catch(err => {
       if (err) {
         console.log(err);
@@ -206,7 +204,6 @@ const F3 = props => {
 };
 
 const Confirmation = props => {
-  console.log(props);
   let entries = Object.entries(props.formData);
   return /*#__PURE__*/React.createElement("div", null, entries.map(entry => /*#__PURE__*/React.createElement(Page, {
     entry: entry,
