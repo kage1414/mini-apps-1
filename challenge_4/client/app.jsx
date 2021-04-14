@@ -32,22 +32,24 @@ class App extends React.Component {
 
   move(event) {
     if (!this.state.winner && !this.state.tie) {
-      let coord = event.currentTarget.dataset.coordinate.split(',');
-      let board = this.state.board;
-      let colors = this.state.colors;
-      let currentColor = this.state.currentColor;
-      let nextColor = this.state.nextColor;
 
-      axios.post('/move', {coord, board, colors, currentColor, nextColor})
+      let currentState = {
+        coord: event.currentTarget.dataset.coordinate.split(','),
+        board: this.state.board,
+        colors: this.state.colors,
+        currentColor: this.state.currentColor,
+        nextColor: this.state.nextColor
+      };
+
+      axios.post('/move', currentState)
         .then((response) => {
-          console.log(response);
           this.setState(response.data.state);
         })
         .catch((error) => {
           alert(error.response.data);
         });
     } else {
-      alert(`Game Over! ${this.state.winner ? this.state.winner + ' is the Winner!': 'Tie!'}\nRefresh Page To Begin New Game`);
+      alert(`Game Over! ${this.state.winner ? this.state.winner + ' is the Winner!' : 'Tie!'}\nRefresh Page To Begin New Game`);
     }
   }
 
