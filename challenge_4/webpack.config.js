@@ -6,7 +6,7 @@ module.exports = {
     filename: 'app.js',
     path: path.resolve(__dirname, 'public')
   },
-  mode: 'production',
+  mode: 'development',
   module: {
     rules: [
       {
@@ -15,7 +15,8 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-react', '@babel/preset-env']
+            presets: ['@babel/preset-react', '@babel/preset-env'],
+            cacheDirectory: true
           }
         }
       }
