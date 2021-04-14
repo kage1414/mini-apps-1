@@ -27,6 +27,7 @@ CREATE TABLE cards (
   expiry_month MEDIUMTEXT,
   expiry_year MEDIUMTEXT,
   cvv MEDIUMTEXT,
+  zipcode MEDIUMTEXT,
   user INTEGER,
   orderId MEDIUMTEXT,
   PRIMARY KEY (id)
@@ -46,6 +47,7 @@ CREATE TABLE orders (
   phone MEDIUMTEXT,
   user INTEGER,
   orderId MEDIUMTEXT,
+  completed BOOLEAN,
   PRIMARY KEY (id)
 
 );

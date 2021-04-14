@@ -5,7 +5,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      submitted: false,
       page: 0,
       formData: {}
     };
@@ -27,6 +26,12 @@ class App extends React.Component {
     }
   }
 
+  reset() {
+    this.setState({
+      page: 0
+    });
+  }
+
   handleInputChange(event) {
     event.preventDefault();
     const id = event.target.id;
@@ -39,16 +44,20 @@ class App extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log('submit');
     const id = event.target.id;
     const formData = this.state.formData;
     axios.post(`/${id}`, formData).then(response => {
       this.setState(response.data.state);
-      console.log(response.data);
     }).catch(err => {
       if (err) {
         console.log(err);
       }
+    });
+  }
+
+  completeOrder(event) {
+    axios.get('/complete').then(response => {
+      this.setState(response.data.state);
     });
   }
 
@@ -57,7 +66,11 @@ class App extends React.Component {
       handleSubmit: this.handleSubmit.bind(this),
       page: this.state.page,
       handleInputChange: this.handleInputChange.bind(this),
-      formData: this.state.formData
+      formData: this.state.formData,
+      completeOrder: this.completeOrder.bind(this),
+      orderData: this.state.orderData,
+      success: this.state.success,
+      reset: this.reset.bind(this)
     }));
   }
 
@@ -79,7 +92,12 @@ class Checkout extends React.Component {
       handleSubmit: this.props.handleSubmit,
       handleInputChange: this.props.handleInputChange
     }), /*#__PURE__*/React.createElement(Confirmation, {
-      formData: this.props.formData
+      formData: this.props.formData,
+      completeOrder: this.props.completeOrder,
+      orderData: this.props.orderData
+    }), /*#__PURE__*/React.createElement(Success, {
+      success: this.props.success,
+      reset: this.props.reset
     })];
     return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, "Checkout"), steps[this.props.page]);
   }
@@ -204,15 +222,21 @@ const F3 = props => {
 };
 
 const Confirmation = props => {
-  let entries = Object.entries(props.formData);
-  return /*#__PURE__*/React.createElement("div", null, entries.map(entry => /*#__PURE__*/React.createElement(Page, {
-    entry: entry,
-    key: JSON.stringify(entry)
-  })));
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("br", null), "First: ", props.orderData.user.first_name, /*#__PURE__*/React.createElement("br", null), "Last: ", props.orderData.user.last_name, /*#__PURE__*/React.createElement("br", null), "Email: ", props.orderData.user.email, /*#__PURE__*/React.createElement("br", null), "Password: ", props.orderData.user.password), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("br", null), "Address Line 1: ", props.orderData.order.line_1, /*#__PURE__*/React.createElement("br", null), "Address Line 2: ", props.orderData.order.line_2, /*#__PURE__*/React.createElement("br", null), "City: ", props.orderData.order.city, /*#__PURE__*/React.createElement("br", null), "State: ", props.orderData.order.state, /*#__PURE__*/React.createElement("br", null), "Zipcode: ", props.orderData.order.zipcode, /*#__PURE__*/React.createElement("br", null), "Phone: ", props.orderData.order.phone), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("br", null), "Card Number: ", props.orderData.card.number, /*#__PURE__*/React.createElement("br", null), "CVV: ", props.orderData.card.cvv, /*#__PURE__*/React.createElement("br", null), "Expiration: ", props.orderData.card.expiry_month, "/", props.orderData.card.expiry_year, /*#__PURE__*/React.createElement("br", null), "Billing Zipcode: ", props.orderData.card.zipcode), /*#__PURE__*/React.createElement("button", {
+    onClick: props.completeOrder
+  }, "Submit Order"));
 };
 
-const Page = props => {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", null, props.entry[0]), /*#__PURE__*/React.createElement("span", null, ": "), /*#__PURE__*/React.createElement("span", null, props.entry[1]));
+const Success = props => {
+  if (props.success) {
+    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", null, "Order Complete!"), /*#__PURE__*/React.createElement("button", {
+      onClick: props.reset
+    }, "Begin a new order"));
+  } else {
+    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", null, "Order Failed!"), /*#__PURE__*/React.createElement("button", {
+      onClick: props.reset
+    }, "Restart Order"));
+  }
 };
 
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.getElementById('app'));

@@ -11,8 +11,8 @@ const User = db.define('users', {
     primaryKey: true,
     autoIncrement: true
   },
-  first_name: Sequelize.STRING,
-  last_name: Sequelize.STRING,
+  'first_name': Sequelize.STRING,
+  'last_name': Sequelize.STRING,
   email: Sequelize.STRING,
   password: Sequelize.STRING,
   orderId: Sequelize.STRING
@@ -27,10 +27,11 @@ const Card = db.define('cards', {
     autoIncrement: true
   },
   number: Sequelize.STRING,
-  expiry_month: Sequelize.STRING,
-  expiry_year: Sequelize.STRING,
+  'expiry_month': Sequelize.STRING,
+  'expiry_year': Sequelize.STRING,
   cvv: Sequelize.STRING,
   user: Sequelize.INTEGER,
+  zipcode: Sequelize.STRING,
   orderId: Sequelize.STRING
 }, {
   timestamps: false
@@ -42,13 +43,14 @@ const Order = db.define('orders', {
     primaryKey: true,
     autoIncrement: true
   },
-  line_1: Sequelize.STRING,
-  line_2: Sequelize.STRING,
+  'line_1': Sequelize.STRING,
+  'line_2': Sequelize.STRING,
   city: Sequelize.STRING,
   state: Sequelize.STRING,
   zipcode: Sequelize.STRING,
   phone: Sequelize.STRING,
   user: Sequelize.INTEGER,
+  completed: Sequelize.BOOLEAN,
   orderId: Sequelize.STRING
 }, {
   timestamps: false
@@ -61,8 +63,8 @@ const Order = db.define('orders', {
 module.exports.addUser = (formData) => {
 
   const data = {
-    first_name: formData.firstName,
-    last_name: formData.lastName,
+    'first_name': formData.firstName,
+    'last_name': formData.lastName,
     email: formData.email,
     password: formData.password,
     orderId: formData.orderId
@@ -94,20 +96,11 @@ module.exports.getUserId = (orderId) => {
 
 };
 
-module.exports.getUser = (formData) => {
-
-  return User.findAll({
-    attributes: ['id', 'email', 'first_name', 'last_name', 'password', 'orderId'],
-    where: formData
-  });
-
-};
-
 module.exports.addOrder = (formData) => {
 
   const data = {
-    line_1: formData.line1,
-    line_2: formData.line2,
+    'line_1': formData.line1,
+    'line_2': formData.line2,
     city: formData.city,
     state: formData.state,
     zipcode: formData.shippingZip,
@@ -121,13 +114,13 @@ module.exports.addOrder = (formData) => {
 };
 
 module.exports.addCard = (formData) => {
-  console.log('formData', formData.orderId);
 
   const data = {
     number: formData.cardNumber,
-    expiry_month: formData.expiryMonth,
-    expiry_year: formData.expiryYear,
+    'expiry_month': formData.expiryMonth,
+    'expiry_year': formData.expiryYear,
     cvv: formData.cvv,
+    zipcode: formData.billingZip,
     user: formData.userId,
     orderId: formData.orderId
   };
@@ -161,6 +154,32 @@ module.exports.findAllOrderData = (orderId) => {
       order = response[0].dataValues;
       const orderData = {user, card, order};
       return orderData;
+    });
+
+};
+
+module.exports.completeOrder = (orderId) => {
+
+  Order.findAll({
+    where: {orderId}
+  })
+    .then((order) => {
+      if (order[0]) {
+        order[0].update({
+          completed: true
+        });
+      }
+    });
+
+  User.findAll({
+    where: {orderId}
+  })
+    .then((user) => {
+      if (user[0]) {
+        user[0].update({
+          completed: true
+        });
+      }
     });
 
 };

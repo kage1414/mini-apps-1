@@ -64,11 +64,8 @@ app.post('/page2', (req, res) => {
         res.send({
           state: {
             page: 2,
-            formData: {},
-            allData: {
-
-            }
-          },
+            formData: {}
+          }
         });
       })
       .catch((err) => {
@@ -108,7 +105,7 @@ app.post('/page3', (req, res) => {
             page: 3,
             formData: {},
             orderData
-          },
+          }
         });
       })
       .catch((err) => {
@@ -123,9 +120,19 @@ app.post('/page3', (req, res) => {
   }
 });
 
-app.get('/confirmation', (req, res) => {
+app.get('/complete', (req, res) => {
 
-
+  const orderId = req.cookies.orderId;
+  db.completeOrder(orderId);
+  res.clearCookie('orderId');
+  res.send({
+    state: {
+      page: 4,
+      formData: {},
+      orderData: {},
+      success: true
+    }
+  });
 
 });
 

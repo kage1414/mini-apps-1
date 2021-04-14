@@ -7,7 +7,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      submitted: false,
       page: 0,
       formData: {}
     };
@@ -29,6 +28,12 @@ class App extends React.Component {
     }
   }
 
+  reset() {
+    this.setState({
+      page: 0
+    });
+  }
+
   handleInputChange(event) {
 
     event.preventDefault();
@@ -40,7 +45,6 @@ class App extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log('submit');
 
     const id = event.target.id;
     const formData = this.state.formData;
@@ -48,7 +52,6 @@ class App extends React.Component {
     axios.post(`/${id}`, formData)
       .then((response) => {
         this.setState(response.data.state);
-        console.log(response.data);
       })
       .catch((err) => {
         if (err) {
@@ -57,10 +60,19 @@ class App extends React.Component {
       });
   }
 
+  completeOrder(event) {
+
+    axios.get('/complete')
+      .then((response) => {
+        this.setState(response.data.state);
+      });
+
+  }
+
   render() {
     return (
       <div>
-        <Checkout handleSubmit={this.handleSubmit.bind(this)} page={this.state.page} handleInputChange={this.handleInputChange.bind(this)} formData={this.state.formData} />
+        <Checkout handleSubmit={this.handleSubmit.bind(this)} page={this.state.page} handleInputChange={this.handleInputChange.bind(this)} formData={this.state.formData} completeOrder={this.completeOrder.bind(this)} orderData={this.state.orderData} success={this.state.success} reset={this.reset.bind(this)} />
       </div>
     );
   }
@@ -78,7 +90,8 @@ class Checkout extends React.Component {
       <F1 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />,
       <F2 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />,
       <F3 handleSubmit={this.props.handleSubmit} handleInputChange={this.props.handleInputChange} />,
-      <Confirmation formData={this.props.formData} />
+      <Confirmation formData={this.props.formData} completeOrder={this.props.completeOrder} orderData={this.props.orderData} />,
+      <Success success={this.props.success} reset={this.props.reset} />
     ];
 
     return (
@@ -168,25 +181,65 @@ const F3 = (props) => {
 
 const Confirmation = (props) => {
 
-  let entries = Object.entries(props.formData);
-
   return (
     <div>
-      {entries.map(entry => (<Page entry={entry} key={JSON.stringify(entry)} />))}
+      <div>
+        <br/>
+        First: {props.orderData.user.first_name}
+        <br/>
+        Last: {props.orderData.user.last_name}
+        <br/>
+        Email: {props.orderData.user.email}
+        <br/>
+        Password: {props.orderData.user.password}
+      </div>
+      <div>
+        <br/>
+        Address Line 1: {props.orderData.order.line_1}
+        <br/>
+        Address Line 2: {props.orderData.order.line_2}
+        <br/>
+        City: {props.orderData.order.city}
+        <br/>
+        State: {props.orderData.order.state}
+        <br/>
+        Zipcode: {props.orderData.order.zipcode}
+        <br/>
+        Phone: {props.orderData.order.phone}
+      </div>
+      <div>
+        <br/>
+        Card Number: {props.orderData.card.number}
+        <br/>
+        CVV: {props.orderData.card.cvv}
+        <br/>
+        Expiration: {props.orderData.card.expiry_month}/{props.orderData.card.expiry_year}
+        <br/>
+        Billing Zipcode: {props.orderData.card.zipcode}
+      </div>
+      <button onClick={props.completeOrder}>Submit Order</button>
     </div>
   );
 
 };
 
-const Page = (props) => {
+const Success = (props) => {
 
-  return (
-    <div>
-      <span>{props.entry[0]}</span>
-      <span>: </span>
-      <span>{props.entry[1]}</span>
-    </div>
-  );
+  if (props.success) {
+    return (
+      <div>
+        <div>Order Complete!</div>
+        <button onClick={props.reset}>Begin a new order</button>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <div>Order Failed!</div>
+        <button onClick={props.reset}>Restart Order</button>
+      </div>
+    );
+  }
 };
 
 ReactDOM.render(<App />, document.getElementById('app'));
