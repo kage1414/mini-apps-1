@@ -36,7 +36,6 @@ const checkColumns = (color, colors) => {
 };
 
 const checkMinDiag = (color, colors) => {
-
   let starters = [[5, 0], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6]];
 
   for (let i = 0; i < starters.length; i++) {
@@ -55,10 +54,8 @@ const checkMinDiag = (color, colors) => {
         return true;
       }
     }
-
   }
   return false;
-
 };
 
 const checkMajDiag = (color, colors) => {
@@ -81,10 +78,8 @@ const checkMajDiag = (color, colors) => {
         return true;
       }
     }
-
   }
   return false;
-
 };
 
 module.exports.checkTie = (colors) => {
@@ -99,7 +94,6 @@ module.exports.checkTie = (colors) => {
 };
 
 module.exports.checkWins = (color, colors) => {
-
   if (checkRows(color, colors) || checkColumns(color, colors) || checkMajDiag(color, colors) || checkMinDiag(color, colors)) {
     return color;
   }

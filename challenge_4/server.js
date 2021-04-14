@@ -12,8 +12,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
 app.post('/move', (req, res) => {
-  console.log('req.body', req.body.currentColor);
-
   let coord = req.body.coord;
   let board = req.body.board;
   let colors = req.body.colors;
@@ -32,16 +30,13 @@ app.post('/move', (req, res) => {
         winner: helpers.checkWins(currentColor, colors),
         tie: helpers.checkTie(colors)
       };
-      // console.log(state);
       res.send({state: state});
       break;
     } else if (i === 0 && board[i][coord[1]] !== '') {
-      // res.statusMessage('Please choose another column');
       res.status(400);
       res.send('Please choose another column');
     }
   }
-
 });
 
 app.listen(PORT, () => {
