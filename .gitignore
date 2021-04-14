@@ -2,3 +2,4 @@ node_modules
 challenge_2/latest.txt
 *.DS_Store
 latest.csv
+challenge_4/public/app.js
